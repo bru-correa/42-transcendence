@@ -4,12 +4,25 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
+import Arena from './src/arena.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+// TODO: Move these global variables
+const gameWidth = innerWidth;
+const gameHeight = innerHeight;
+
+const arenaWidth = 50;
+const arenaDepth = 30;
+
+// TODO: Remove the walls global variables
+const wallTop = -arenaDepth / 2;
+const wallBottom = arenaDepth / 2;
+const wallLeftSide = -arenaWidth / 2;
+const wallRightSide = arenaWidth / 2;
+
 const backgroundImage = new THREE.TextureLoader().load(
   './public/Starfield.png',
 );
-
-const gameWidth = innerWidth;
-const gameHeight = innerHeight;
 
 const keys = {
   paddleLUp: false,
@@ -17,6 +30,8 @@ const keys = {
   paddleRUp: false,
   paddleRDown: false,
 };
+
+// TODO: Move rendering boiler plate to another file
 
 // Boilerplate
 const scene = new THREE.Scene();
@@ -31,6 +46,8 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(gameWidth, gameHeight);
 renderer.setAnimationLoop(animationLoop);
 document.body.appendChild(renderer.domElement);
+
+new OrbitControls(camera, renderer.domElement);
 
 // const light = new THREE.DirectionalLight(0x2dd7ff, 85);
 const light1 = new THREE.DirectionalLight(0xffffff, 5);
@@ -55,66 +72,28 @@ composer.addPass(renderScene);
 composer.addPass(bloomPass);
 composer.addPass(outputPass);
 
-window.addEventListener('resize', (event) => {
-  camera.aspect = gameWidth / gameHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(gameWidth, gameHeight);
-  composer.setSize(gameWidth, gameHeight);
-});
-
+// TODO: Create a ball class
 const ball = new THREE.Mesh(
   new THREE.SphereGeometry(0.4),
   new THREE.MeshBasicMaterial({ color: 0xffff00 }),
 );
 scene.add(ball);
 
-// Plane
-const ground = new THREE.Mesh(
-  new THREE.BoxGeometry(50, 2, 30),
-  new THREE.MeshStandardMaterial({
-    // color: new THREE.Color(0x3333dd),
-    color: new THREE.Color(0x0000aa),
-    metalness: 0.2,
-    roughness: 0.7,
-    emissive: new THREE.Color(0x98),
-    flatShading: true,
-  }),
-);
-ground.position.y = -3;
-ground.position.z = -2;
-scene.add(ground);
-
-// Walls
-// const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x0000dd });
-const wallMaterial = new THREE.MeshStandardMaterial({
-  color: 0x0000dd,
+const arena = new Arena({
+  width: arenaWidth,
+  height: 2,
+  depth: arenaDepth,
+  walls: {
+    thickness: 2,
+    height: 2,
+    color: '#0000dd',
+  },
 });
-const horizontalWallGeometry = new THREE.BoxGeometry(50, 2, 2);
-const verticalWallGeometry = new THREE.BoxGeometry(2, 2, 32);
+scene.add(arena);
+arena.buildWalls(scene);
 
-const wallUp = new THREE.Mesh(horizontalWallGeometry, wallMaterial);
-wallUp.position.y = -2;
-wallUp.position.z = -17;
-scene.add(wallUp);
-
-const wallDown = new THREE.Mesh(horizontalWallGeometry, wallMaterial);
-wallDown.position.y = -2;
-wallDown.position.z = 13;
-scene.add(wallDown);
-
-const wallRight = new THREE.Mesh(verticalWallGeometry, wallMaterial);
-wallRight.position.x = 26;
-wallRight.position.y = -2;
-wallRight.position.z = -2;
-scene.add(wallRight);
-
-const wallLeft = new THREE.Mesh(verticalWallGeometry, wallMaterial);
-wallLeft.position.x = -26;
-wallLeft.position.y = -2;
-wallLeft.position.z = -2;
-scene.add(wallLeft);
-
-class Box extends THREE.Mesh {
+// TODO: Move the paddle class to another file
+class Paddle extends THREE.Mesh {
   constructor({
     width,
     height,
@@ -142,8 +121,8 @@ class Box extends THREE.Mesh {
 
     this.position.set(position.x, position.y, position.z);
 
-    this.bottom = this.position.y - this.height / 2;
-    this.top = this.position.y + this.height / 2;
+    this.bottomSide = this.position.z - this.depth / 2;
+    this.topSide = this.position.z + this.depth / 2;
     this.rightSide = this.position.x + this.width / 2;
     this.leftSide = this.position.x - this.width / 2;
 
@@ -151,18 +130,26 @@ class Box extends THREE.Mesh {
   }
 
   update() {
-    this.bottom = this.position.y - this.height / 2;
-    this.top = this.position.y + this.height / 2;
+    this.bottomSide = this.position.z + this.depth / 2;
+    this.topSide = this.position.z - this.depth / 2;
     this.rightSide = this.position.x + this.width / 2;
     this.leftSide = this.position.x - this.width / 2;
 
-    this.position.z += this.velocity.z;
-    console.log(this.velocity.z);
+    if (
+      this.topSide + this.velocity.z <= wallTop ||
+      this.bottomSide + this.velocity.z >= wallBottom
+    ) {
+      this.velocity.z = 0;
+      console.log(`top: ${paddleL.topSide} | wallTop: ${wallTop}`);
+      console.log(`bottom: ${paddleL.bottomSide} | wallBottom: ${wallBottom}`);
+    } else {
+      this.position.z += this.velocity.z;
+    }
   }
 }
 
 // Player 1
-const paddleL = new Box({
+const paddleL = new Paddle({
   width: 0.5,
   height: 0.5,
   depth: 3.5,
@@ -176,7 +163,7 @@ const paddleL = new Box({
 scene.add(paddleL);
 
 // Player 2
-const paddleR = new Box({
+const paddleR = new Paddle({
   width: 0.5,
   height: 0.5,
   depth: 3.5,
@@ -189,6 +176,7 @@ const paddleR = new Box({
 });
 scene.add(paddleR);
 
+// TODO: Move the event listeners to another file
 window.addEventListener('keydown', (event) => {
   switch (event.code) {
     case 'KeyW':
@@ -223,6 +211,14 @@ window.addEventListener('keyup', (event) => {
   }
 });
 
+window.addEventListener('resize', (event) => {
+  camera.aspect = gameWidth / gameHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(gameWidth, gameHeight);
+  composer.setSize(gameWidth, gameHeight);
+});
+
+// TODO: Move input to another file
 function handleInput() {
   paddleR.velocity.z = 0;
   paddleL.velocity.z = 0;
