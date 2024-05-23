@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import Arena from './src/arena.js';
 import Paddle from './src/paddle.js';
 import PostProcessing from './src/post-processing.js';
+import InputManager from './src/input-manager.js';
 
 // TODO: Move these global variables
 const gameWidth = innerWidth;
@@ -13,15 +14,6 @@ const arenaWidth = 50;
 const arenaDepth = 30;
 
 const backgroundImage = new THREE.TextureLoader().load('./Starfield.png');
-
-const keys = {
-  paddleLUp: false,
-  paddleLDown: false,
-  paddleRUp: false,
-  paddleRDown: false,
-};
-
-// TODO: Move rendering boiler plate to another file
 
 // Boilerplate
 const scene = new THREE.Scene();
@@ -58,6 +50,8 @@ const postProcessing = new PostProcessing({
 });
 postProcessing.setup();
 
+const inputManager = new InputManager({});
+
 // TODO: Create a ball class
 const ball = new THREE.Mesh(
   new THREE.SphereGeometry(0.4),
@@ -80,9 +74,6 @@ arena.buildWalls(scene);
 
 // Player 1
 const paddleL = new Paddle({
-  width: 0.5,
-  height: 0.5,
-  depth: 3.5,
   color: '#FF0000',
   position: {
     x: -20,
@@ -95,9 +86,6 @@ scene.add(paddleL);
 
 // Player 2
 const paddleR = new Paddle({
-  width: 0.5,
-  height: 0.5,
-  depth: 3.5,
   color: '#00FF00',
   position: {
     x: 20,
@@ -108,55 +96,10 @@ const paddleR = new Paddle({
 });
 scene.add(paddleR);
 
-// TODO: Move the event listeners to another file
-window.addEventListener('keydown', (event) => {
-  switch (event.code) {
-    case 'KeyW':
-      keys.paddleLUp = true;
-      break;
-    case 'KeyS':
-      keys.paddleLDown = true;
-      break;
-    case 'KeyK':
-      keys.paddleRUp = true;
-      break;
-    case 'KeyJ':
-      keys.paddleRDown = true;
-      break;
-  }
-});
-
-window.addEventListener('keyup', (event) => {
-  switch (event.code) {
-    case 'KeyW':
-      keys.paddleLUp = false;
-      break;
-    case 'KeyS':
-      keys.paddleLDown = false;
-      break;
-    case 'KeyK':
-      keys.paddleRUp = false;
-      break;
-    case 'KeyJ':
-      keys.paddleRDown = false;
-      break;
-  }
-});
-
-// TODO: Move input to another file
-function handleInput() {
-  paddleR.velocity.z = 0;
-  paddleL.velocity.z = 0;
-  if (keys.paddleLUp) paddleL.velocity.z = -0.1;
-  else if (keys.paddleLDown) paddleL.velocity.z = 0.1;
-  if (keys.paddleRUp) paddleR.velocity.z = -0.1;
-  else if (keys.paddleRDown) paddleR.velocity.z = 0.1;
-}
-
-function animationLoop(t) {
+function animationLoop(_) {
   // ball.rotation.set(Math.sin(t / 700), Math.cos(t / 800), 0);
-  handleInput();
-  paddleL.update();
-  paddleR.update();
+  inputManager.handleInput();
+  paddleL.update(inputManager.paddleLInputZ);
+  paddleR.update(inputManager.paddleRInputZ);
   postProcessing.render();
 }
