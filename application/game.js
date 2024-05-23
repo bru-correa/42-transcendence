@@ -6,6 +6,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 import Arena from './src/arena.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import Paddle from './src/paddle.js';
 
 // TODO: Move these global variables
 const gameWidth = innerWidth;
@@ -15,11 +16,6 @@ const arenaWidth = 50;
 const arenaDepth = 30;
 
 // TODO: Remove the walls global variables
-const wallTop = -arenaDepth / 2;
-const wallBottom = arenaDepth / 2;
-const wallLeftSide = -arenaWidth / 2;
-const wallRightSide = arenaWidth / 2;
-
 const backgroundImage = new THREE.TextureLoader().load(
   './public/Starfield.png',
 );
@@ -40,7 +36,6 @@ scene.background = backgroundImage;
 const camera = new THREE.PerspectiveCamera(45, gameWidth / gameHeight);
 // camera.position.set(0, 45, 20);
 camera.position.set(0, 48, 10);
-camera.lookAt(scene.position);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(gameWidth, gameHeight);
@@ -85,68 +80,12 @@ const arena = new Arena({
   depth: arenaDepth,
   walls: {
     thickness: 2,
-    height: 2,
+    height: 0,
     color: '#0000dd',
   },
 });
 scene.add(arena);
 arena.buildWalls(scene);
-
-// TODO: Move the paddle class to another file
-class Paddle extends THREE.Mesh {
-  constructor({
-    width,
-    height,
-    depth,
-    color = '#00ff00',
-    velocity = {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-    position = {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-  }) {
-    super(
-      new THREE.BoxGeometry(width, height, depth),
-      new THREE.MeshBasicMaterial({ color }),
-    );
-
-    this.width = width;
-    this.height = height;
-    this.depth = depth;
-
-    this.position.set(position.x, position.y, position.z);
-
-    this.bottomSide = this.position.z - this.depth / 2;
-    this.topSide = this.position.z + this.depth / 2;
-    this.rightSide = this.position.x + this.width / 2;
-    this.leftSide = this.position.x - this.width / 2;
-
-    this.velocity = velocity;
-  }
-
-  update() {
-    this.bottomSide = this.position.z + this.depth / 2;
-    this.topSide = this.position.z - this.depth / 2;
-    this.rightSide = this.position.x + this.width / 2;
-    this.leftSide = this.position.x - this.width / 2;
-
-    if (
-      this.topSide + this.velocity.z <= wallTop ||
-      this.bottomSide + this.velocity.z >= wallBottom
-    ) {
-      this.velocity.z = 0;
-      console.log(`top: ${paddleL.topSide} | wallTop: ${wallTop}`);
-      console.log(`bottom: ${paddleL.bottomSide} | wallBottom: ${wallBottom}`);
-    } else {
-      this.position.z += this.velocity.z;
-    }
-  }
-}
 
 // Player 1
 const paddleL = new Paddle({
@@ -156,8 +95,12 @@ const paddleL = new Paddle({
   color: '#FF0000',
   position: {
     x: -20,
-    y: 0,
+    y: 1.5,
     z: 0,
+  },
+  arenaLimit: {
+    bot: arena.bottomSide,
+    top: arena.topSide,
   },
 });
 scene.add(paddleL);
@@ -170,8 +113,12 @@ const paddleR = new Paddle({
   color: '#00FF00',
   position: {
     x: 20,
-    y: 0,
+    y: 1.5,
     z: 0,
+  },
+  arenaLimit: {
+    bot: arena.bottomSide,
+    top: arena.topSide,
   },
 });
 scene.add(paddleR);
@@ -233,5 +180,8 @@ function animationLoop(t) {
   handleInput();
   paddleL.update();
   paddleR.update();
+  console.log(
+    `Player: ${paddleL.position.z} Top: ${arena.topSide} Bot: ${arena.bottomSide}`,
+  );
   composer.render(scene, camera);
 }
