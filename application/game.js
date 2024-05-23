@@ -1,12 +1,9 @@
 import * as THREE from 'three';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-import Arena from './src/arena.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import Arena from './src/arena.js';
 import Paddle from './src/paddle.js';
+import PostProcessing from './src/post-processing.js';
 
 // TODO: Move these global variables
 const gameWidth = innerWidth;
@@ -15,7 +12,6 @@ const gameHeight = innerHeight;
 const arenaWidth = 50;
 const arenaDepth = 30;
 
-// TODO: Remove the walls global variables
 const backgroundImage = new THREE.TextureLoader().load('./Starfield.png');
 
 const keys = {
@@ -31,10 +27,11 @@ const keys = {
 const scene = new THREE.Scene();
 scene.background = backgroundImage;
 
+// Create camera
 const camera = new THREE.PerspectiveCamera(45, gameWidth / gameHeight);
-// camera.position.set(0, 45, 20);
-camera.position.set(0, 48, 10);
+camera.position.set(0, 52, 10);
 
+// Setup renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(gameWidth, gameHeight);
 renderer.setAnimationLoop(animationLoop);
@@ -42,9 +39,8 @@ document.body.appendChild(renderer.domElement);
 
 new OrbitControls(camera, renderer.domElement);
 
-// const light = new THREE.DirectionalLight(0x2dd7ff, 85);
+// Create directional lights
 const light1 = new THREE.DirectionalLight(0xffffff, 5);
-// light.position.set(0, 0, 1);
 light1.position.set(30, 0.5, 1);
 scene.add(light1);
 
@@ -52,18 +48,15 @@ const light2 = new THREE.DirectionalLight(0xffffff, 5);
 light2.position.set(-30, 0.5, 1);
 scene.add(light2);
 
-// Post Processing Setup
-const renderScene = new RenderPass(scene, camera);
-
-const bloomResolution = new THREE.Vector2(gameWidth, gameHeight);
-const bloomPass = new UnrealBloomPass(bloomResolution, 0.5, 0.5, 0.1);
-
-const outputPass = new OutputPass(THREE.ReinhardToneMapping);
-
-const composer = new EffectComposer(renderer);
-composer.addPass(renderScene);
-composer.addPass(bloomPass);
-composer.addPass(outputPass);
+// Setup post processing effects
+const postProcessing = new PostProcessing({
+  scene: scene,
+  camera: camera,
+  renderer: renderer,
+  gameWidth: gameWidth,
+  gameHeight: gameHeight,
+});
+postProcessing.setup();
 
 // TODO: Create a ball class
 const ball = new THREE.Mesh(
@@ -150,13 +143,6 @@ window.addEventListener('keyup', (event) => {
   }
 });
 
-window.addEventListener('resize', (event) => {
-  camera.aspect = gameWidth / gameHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(gameWidth, gameHeight);
-  composer.setSize(gameWidth, gameHeight);
-});
-
 // TODO: Move input to another file
 function handleInput() {
   paddleR.velocity.z = 0;
@@ -168,9 +154,9 @@ function handleInput() {
 }
 
 function animationLoop(t) {
-  ball.rotation.set(Math.sin(t / 700), Math.cos(t / 800), 0);
+  // ball.rotation.set(Math.sin(t / 700), Math.cos(t / 800), 0);
   handleInput();
   paddleL.update();
   paddleR.update();
-  composer.render(scene, camera);
+  postProcessing.render();
 }
