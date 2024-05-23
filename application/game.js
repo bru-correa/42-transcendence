@@ -16,9 +16,7 @@ const arenaWidth = 50;
 const arenaDepth = 30;
 
 // TODO: Remove the walls global variables
-const backgroundImage = new THREE.TextureLoader().load(
-  './public/Starfield.png',
-);
+const backgroundImage = new THREE.TextureLoader().load('./Starfield.png');
 
 const keys = {
   paddleLUp: false,
@@ -98,10 +96,7 @@ const paddleL = new Paddle({
     y: 1.5,
     z: 0,
   },
-  arenaLimit: {
-    bot: arena.bottomSide,
-    top: arena.topSide,
-  },
+  arenaDepth: arena.depth,
 });
 scene.add(paddleL);
 
@@ -116,10 +111,7 @@ const paddleR = new Paddle({
     y: 1.5,
     z: 0,
   },
-  arenaLimit: {
-    bot: arena.bottomSide,
-    top: arena.topSide,
-  },
+  arenaDepth: arena.depth,
 });
 scene.add(paddleR);
 
@@ -180,8 +172,5 @@ function animationLoop(t) {
   handleInput();
   paddleL.update();
   paddleR.update();
-  console.log(
-    `Player: ${paddleL.position.z} Top: ${arena.topSide} Bot: ${arena.bottomSide}`,
-  );
   composer.render(scene, camera);
 }

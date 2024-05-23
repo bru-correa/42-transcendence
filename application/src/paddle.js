@@ -5,7 +5,7 @@ export default class Paddle extends THREE.Mesh {
     width,
     height,
     depth,
-    color = '#00ff00',
+    color = '#ffffff',
     velocity = {
       x: 0,
       y: 0,
@@ -16,10 +16,7 @@ export default class Paddle extends THREE.Mesh {
       y: 0,
       z: 0,
     },
-    arenaLimit = {
-      bot,
-      top,
-    },
+    arenaDepth,
   }) {
     super(
       new THREE.BoxGeometry(width, height, depth),
@@ -39,7 +36,7 @@ export default class Paddle extends THREE.Mesh {
 
     this.velocity = velocity;
 
-    this.arenaLimit = arenaLimit;
+    this.wallDistanceFromCenter = Math.abs(arenaDepth / 2);
   }
 
   update() {
@@ -48,25 +45,9 @@ export default class Paddle extends THREE.Mesh {
     this.rightSide = this.position.x + this.width / 2;
     this.leftSide = this.position.x - this.width / 2;
 
-    // if (
-    //   this.topSide + this.velocity.z <= this.arenaLimit.top ||
-    //   this.bottomSide + this.velocity.z >= this.arenaLimit.bot
-    // ) {
-    //   this.velocity.z = 0;
-    // } else {
-    //   this.position.z += this.velocity.z;
-    // }
-    console.log(`Player Bot: ${this.bottomSide + this.velocity.z}`);
-    // if (
-    //   this.topSide + this.velocity.z > this.arenaLimit.top &&
-    //   this.bottomSide + this.velocity.y < this.arenaLimit.bot
-    // ) {
-    //   this.position.z += this.velocity.z;
-    // }
-    if (
-      this.topSide + this.velocity.z < Math.abs(this.arenaLimit.top) &&
-      this.bottomSide + this.velocity.y > Math.abs(this.arenaLimit.bot)
-    ) {
+    const playerCollisionDelta =
+      Math.abs(this.position.z + this.velocity.z) + Math.abs(this.depth / 2);
+    if (playerCollisionDelta < this.wallDistanceFromCenter) {
       this.position.z += this.velocity.z;
     }
   }
