@@ -25,7 +25,6 @@ scene.background = backgroundImage;
 
 // Create camera
 const camera = new THREE.PerspectiveCamera(45, gameWidth / gameHeight);
-camera.lookAt(scene);
 camera.position.set(0, 52, 10);
 
 // Setup renderer
