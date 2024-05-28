@@ -16,7 +16,7 @@ const arenaWidth = 50;
 const arenaDepth = 30;
 
 const backgroundImage = new THREE.TextureLoader().load(
-  "static/pong/img/Starfield.png"
+  "static/pong/img/Starfield.png",
 );
 
 // Boilerplate
@@ -113,5 +113,6 @@ function animationLoop(_) {
   inputManager.handleInput();
   paddleL.update(inputManager.paddleLInputZ);
   paddleR.update(inputManager.paddleRInputZ);
+  ball.update(arena, paddleL, paddleR);
   postProcessing.render();
 }

@@ -36,7 +36,7 @@ export default class Paddle extends THREE.Mesh {
   update(paddleInputZ) {
     this.velocity = paddleInputZ * this.speed;
     this.updateCollisionPoints();
-    this.checkCollision();
+    if (this.checkCollision() == false) this.position.z += this.velocity;
   }
 
   updateCollisionPoints() {
@@ -47,11 +47,9 @@ export default class Paddle extends THREE.Mesh {
   }
 
   checkCollision() {
-    console.log(this.velocity);
     const playerCollisionDelta =
       Math.abs(this.position.z + this.velocity) + Math.abs(this.depth / 2);
-    if (playerCollisionDelta < this.wallDistanceFromCenter) {
-      this.position.z += this.velocity;
-    }
+    if (playerCollisionDelta < this.wallDistanceFromCenter) return false;
+    return true;
   }
 }
