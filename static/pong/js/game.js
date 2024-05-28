@@ -1,5 +1,4 @@
 import * as THREE from "./three/three.module.js";
-// import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.117.1/build/three.module.js";
 
 import { OrbitControls } from "./three/addons/OrbitControls.js";
 
@@ -7,10 +6,11 @@ import Arena from "./src/arena.js";
 import Paddle from "./src/paddle.js";
 import PostProcessing from "./src/post-processing.js";
 import InputManager from "./src/input-manager.js";
+import Ball from "./src/ball.js";
 
 // TODO: Move these global variables
-const gameWidth = innerWidth;
-const gameHeight = innerHeight;
+const gameWidth = innerWidth / 1.2;
+const gameHeight = innerHeight / 1.2;
 
 const arenaWidth = 50;
 const arenaDepth = 30;
@@ -31,7 +31,8 @@ camera.position.set(0, 52, 10);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(gameWidth, gameHeight);
 renderer.setAnimationLoop(animationLoop);
-document.body.appendChild(renderer.domElement);
+const gameDiv = document.getElementById("game");
+gameDiv.appendChild(renderer.domElement);
 
 new OrbitControls(camera, renderer.domElement);
 
@@ -56,13 +57,6 @@ postProcessing.setup();
 
 const inputManager = new InputManager({});
 
-// TODO: Create a ball class
-const ball = new THREE.Mesh(
-  new THREE.SphereGeometry(0.4),
-  new THREE.MeshBasicMaterial({ color: 0xffff00 })
-);
-scene.add(ball);
-
 const arena = new Arena({
   width: arenaWidth,
   height: 2,
@@ -76,12 +70,25 @@ const arena = new Arena({
 scene.add(arena);
 arena.buildWalls(scene);
 
+const ballRadius = 0.4;
+const ball = new Ball({
+  radius: ballRadius,
+  position: {
+    x: 0,
+    y: arena.height / 2 + ballRadius,
+    z: 0,
+  },
+});
+scene.add(ball);
+
 // Player 1
+const paddleHeight = 0.5;
 const paddleL = new Paddle({
   color: "#FF0000",
+  height: paddleHeight,
   position: {
     x: -20,
-    y: 1.5,
+    y: arena.height / 2 + paddleHeight,
     z: 0,
   },
   arenaDepth: arena.depth,
@@ -91,9 +98,10 @@ scene.add(paddleL);
 // Player 2
 const paddleR = new Paddle({
   color: "#00FF00",
+  height: paddleHeight,
   position: {
     x: 20,
-    y: 1.5,
+    y: arena.height / 2 + paddleHeight,
     z: 0,
   },
   arenaDepth: arena.depth,
