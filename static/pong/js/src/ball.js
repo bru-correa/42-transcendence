@@ -50,4 +50,11 @@ export default class Ball extends THREE.Mesh {
     else if (nextPosX <= arena.leftSide) return true;
     return false;
   }
+
+  // checkPaddleColision(paddle) {
+  //   const nextPosX = this.position.x + this.velocity.x;
+  //   if (nextPosX >= paddle) {
+
+  //   }
+  // }
 }
