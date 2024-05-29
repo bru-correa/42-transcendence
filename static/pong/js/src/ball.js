@@ -4,7 +4,7 @@ export default class Ball extends THREE.Mesh {
   constructor({
     radius = 2,
     color = "#ffff00",
-    speed = 0.2,
+    speed = 0.15,
     position = {
       x: 0,
       y: 0,
@@ -13,8 +13,10 @@ export default class Ball extends THREE.Mesh {
   }) {
     super(
       new THREE.SphereGeometry(radius),
-      new THREE.MeshBasicMaterial({ color })
+      new THREE.MeshBasicMaterial({ color }),
     );
+
+    this.radius = radius;
 
     this.position.set(position.x, position.y, position.z);
 
@@ -32,6 +34,12 @@ export default class Ball extends THREE.Mesh {
       this.velocity.z *= -1;
     } else if (this.checkWallVCollision(arena)) {
       this.velocity.x *= -1;
+    } else if (
+      this.checkPaddleColision(paddleL) ||
+      this.checkPaddleColision(paddleR)
+    ) {
+      this.velocity.z *= -1;
+      this.velocity.x *= -1;
     }
     this.position.x += this.velocity.x;
     this.position.z += this.velocity.z;
@@ -39,22 +47,32 @@ export default class Ball extends THREE.Mesh {
 
   checkWallHCollision(arena) {
     const nextPosZ = this.position.z + this.velocity.z;
-    if (nextPosZ <= arena.topSide) return true;
-    else if (nextPosZ >= arena.bottomSide) return true;
+    if (nextPosZ - this.radius <= arena.topSide) return true;
+    else if (nextPosZ + this.radius >= arena.bottomSide) return true;
     return false;
   }
 
   checkWallVCollision(arena) {
     const nextPosX = this.position.x + this.velocity.x;
-    if (nextPosX >= arena.rightSide) return true;
-    else if (nextPosX <= arena.leftSide) return true;
+    if (nextPosX + this.radius >= arena.rightSide) return true;
+    else if (nextPosX - this.radius <= arena.leftSide) return true;
     return false;
   }
 
-  // checkPaddleColision(paddle) {
-  //   const nextPosX = this.position.x + this.velocity.x;
-  //   if (nextPosX >= paddle) {
-
-  //   }
-  // }
+  checkPaddleColision(paddle) {
+    const nextPosX = this.position.x + this.velocity.x;
+    const nextPosZ = this.position.z + this.velocity.z;
+    if (
+      nextPosX + this.radius >= paddle.leftSide &&
+      nextPosX - this.radius <= paddle.rightSide
+    ) {
+      if (
+        nextPosZ - this.radius <= paddle.bottomSide &&
+        nextPosZ + this.radius >= paddle.topSide
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
