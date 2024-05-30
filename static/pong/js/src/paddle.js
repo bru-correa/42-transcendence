@@ -6,7 +6,7 @@ export default class Paddle extends THREE.Mesh {
     height = 0.5,
     depth = 3.5,
     color = "#ffffff",
-    speed = 0.1,
+    speed = 0.15,
     position = {
       x: 0,
       y: 0,
@@ -16,7 +16,7 @@ export default class Paddle extends THREE.Mesh {
   }) {
     super(
       new THREE.BoxGeometry(width, height, depth),
-      new THREE.MeshBasicMaterial({ color })
+      new THREE.MeshBasicMaterial({ color }),
     );
 
     this.width = width;

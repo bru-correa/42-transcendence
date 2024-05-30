@@ -4,7 +4,7 @@ export default class Ball extends THREE.Mesh {
   constructor({
     radius = 2,
     color = "#ffff00",
-    speed = 0.15,
+    speed = 0.25,
     position = {
       x: 0,
       y: 0,
@@ -30,16 +30,16 @@ export default class Ball extends THREE.Mesh {
   }
 
   update(arena, paddleL, paddleR) {
+    const nextPosX = this.position.x + this.velocity.x;
+    const nextPosZ = this.position.z + this.velocity.z;
     if (this.checkWallHCollision(arena)) {
       this.velocity.z *= -1;
     } else if (this.checkWallVCollision(arena)) {
       this.velocity.x *= -1;
-    } else if (
-      this.checkPaddleColision(paddleL) ||
-      this.checkPaddleColision(paddleR)
-    ) {
-      this.velocity.z *= -1;
-      this.velocity.x *= -1;
+    } else if (this.checkPaddleColision(paddleL)) {
+      this.updateVelocity(nextPosX, nextPosZ, paddleL);
+    } else if (this.checkPaddleColision(paddleR)) {
+      this.updateVelocity(nextPosX, nextPosZ, paddleR);
     }
     this.position.x += this.velocity.x;
     this.position.z += this.velocity.z;
@@ -74,5 +74,16 @@ export default class Ball extends THREE.Mesh {
       }
     }
     return false;
+  }
+
+  updateVelocity(intersectX, intersectZ, paddle) {
+    const relativeDelta = paddle.position.z - intersectZ;
+    const normalizedDelta = relativeDelta / (paddle.depth / 2);
+    const maxBounceAngle = Math.PI / 4;
+    const bounceAngle = normalizedDelta * maxBounceAngle;
+    this.velocity.x =
+      Math.sign(this.velocity.x) * -Math.cos(bounceAngle) * this.speed;
+    this.velocity.z =
+      Math.sign(this.velocity.z) * Math.sin(bounceAngle) * this.speed;
   }
 }
