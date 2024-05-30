@@ -1,0 +1,39 @@
+services:
+  django:
+    build:
+      context: .
+    restart: on-failure:5
+    ports:
+      - "80:8000"
+    volumes:
+      - .:/app
+    command:
+      - sh
+      - -c
+      - |
+        python3 manage.py makemigrations
+        python3 manage.py migrate --noinput
+        gunicorn -c gunicorn_config.py
+    depends_on:
+      - postgres
+    networks:
+      - postgres_nw
+
+  postgres:
+    image: postgres:16.3-alpine
+    container_name: postgres
+    restart: on-failure:5
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: transcendence_db
+    ports:
+      - 5432:5432
+    networks:
+      - postgres_nw
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+
+networks:
+  postgres_nw:
+    driver: bridge
