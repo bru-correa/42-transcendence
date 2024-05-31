@@ -31,6 +31,8 @@ export default class Paddle extends THREE.Mesh {
     this.velocity = 0;
 
     this.wallDistanceFromCenter = Math.abs(arenaDepth / 2);
+
+    this.canCollideWithBall = true;
   }
 
   update(paddleInputZ) {

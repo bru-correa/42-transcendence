@@ -39,8 +39,12 @@ export default class Ball extends THREE.Mesh {
     } else if (this.checkWallVCollision(arena, nextPos)) {
       this.velocity.x *= -1;
     } else if (this.checkPaddleColision(paddleL, nextPos)) {
+      paddleL.canCollideWithBall = false;
+      paddleR.canCollideWithBall = true;
       this.updateVelocity(nextPos.z, paddleL);
     } else if (this.checkPaddleColision(paddleR, nextPos)) {
+      paddleR.canCollideWithBall = false;
+      paddleL.canCollideWithBall = true;
       this.updateVelocity(nextPos.z, paddleR);
     }
     this.position.x += this.velocity.x;
@@ -60,7 +64,8 @@ export default class Ball extends THREE.Mesh {
   }
 
   checkPaddleColision(paddle, nextPos) {
-    if (
+    if (paddle.canCollideWithBall == false) return false;
+    else if (
       nextPos.x + this.radius >= paddle.leftSide &&
       nextPos.x - this.radius <= paddle.rightSide
     ) {
@@ -79,23 +84,19 @@ export default class Ball extends THREE.Mesh {
     const normalizedDelta = relativeDelta / (paddle.depth / 2);
     const maxBounceAngle = Math.PI / 4;
     const bounceAngle = normalizedDelta * maxBounceAngle;
-    this.checkPaddleSideCollision(paddle);
+    const currentSpeed = this.checkPaddleSideCollision(paddle)
+      ? this.speed * 1.35
+      : this.speed;
     this.velocity.x =
-      Math.sign(this.velocity.x) * -Math.cos(bounceAngle) * this.speed;
-    this.velocity.z = Math.sin(bounceAngle) * this.speed;
+      Math.sign(this.velocity.x) * -Math.cos(bounceAngle) * currentSpeed;
+    this.velocity.z = Math.sin(bounceAngle) * currentSpeed;
   }
 
-  // TODO: One collision at time
   checkPaddleSideCollision(paddle) {
     if (
-      this.position.z + this.radius <= paddle.topSide ||
-      this.position.z - this.radius >= paddle.bottomSide
-    ) {
-      if (Math.sign(paddle.position.x) > 0) {
-        this.position.x = paddle.position.x - paddle.depth / 2 - this.radius;
-      } else {
-        this.position.x = paddle.position.x + paddle.depth / 2 + this.radius;
-      }
-    }
+      this.position.z <= paddle.topSide ||
+      this.position.z >= paddle.bottomSide
+    )
+      return true;
   }
 }
