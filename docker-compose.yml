@@ -26,7 +26,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: transcendence_db
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - ./postgres:/var/lib/postgresql/data
 
