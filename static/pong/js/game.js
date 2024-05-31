@@ -7,6 +7,7 @@ import Paddle from "./src/paddle.js";
 import PostProcessing from "./src/post-processing.js";
 import InputManager from "./src/input-manager.js";
 import Ball from "./src/ball.js";
+import GameManager from "./src/game-manager.js";
 
 // TODO: Move these global variables
 const gameWidth = innerWidth / 1.2;
@@ -14,6 +15,9 @@ const gameHeight = innerHeight / 1.2;
 
 const arenaWidth = 50;
 const arenaDepth = 30;
+
+const targetFrameRate = 1000 / 60; // 60fps
+let deltaTime = 0;
 
 const backgroundImage = new THREE.TextureLoader().load(
   "static/pong/img/Starfield.png",
@@ -57,6 +61,10 @@ postProcessing.setup();
 
 const inputManager = new InputManager({});
 
+const gameManager = new GameManager({
+  maxScore: 3,
+});
+
 const arena = new Arena({
   width: arenaWidth,
   height: 2,
@@ -78,13 +86,14 @@ const ball = new Ball({
     y: arena.height / 2 + ballRadius,
     z: 0,
   },
+  gameManager: gameManager,
 });
 scene.add(ball);
 
 // Player 1
 const paddleHeight = 0.5;
 const paddleL = new Paddle({
-  color: "#FF0000",
+  color: 0xff007f,
   height: paddleHeight,
   position: {
     x: -20,
@@ -92,12 +101,13 @@ const paddleL = new Paddle({
     z: 0,
   },
   arenaDepth: arena.depth,
+  gameManager: gameManager,
 });
 scene.add(paddleL);
 
 // Player 2
 const paddleR = new Paddle({
-  color: "#00FF00",
+  color: 0x0fff50,
   height: paddleHeight,
   position: {
     x: 20,
@@ -105,11 +115,12 @@ const paddleR = new Paddle({
     z: 0,
   },
   arenaDepth: arena.depth,
+  gameManager: gameManager,
 });
 scene.add(paddleR);
 
-function animationLoop(_) {
-  // ball.rotation.set(Math.sin(t / 700), Math.cos(t / 800), 0);
+function animationLoop(timestamp) {
+  gameManager.updateDeltaTime(timestamp);
   inputManager.handleInput();
   paddleL.update(inputManager.paddleLInputZ);
   paddleR.update(inputManager.paddleRInputZ);
