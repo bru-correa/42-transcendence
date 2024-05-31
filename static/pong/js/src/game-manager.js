@@ -3,6 +3,14 @@ export default class GameManager {
     this.playerLScore = 0;
     this.playerRScore = 0;
     this.maxScore = maxScore;
+
+    this.targetFrameRate = 1000 / 60; // 60 fps
+
+    this.deltaTime = 0;
+
+    this.previousTime = performance.now();
+
+    this.lastTimeStamp = 0;
   }
 
   resetScore() {
@@ -22,5 +30,10 @@ export default class GameManager {
     if (this.playerRScore >= this.maxScore) {
       console.log("Game Over! The Right Player Won");
     }
+  }
+
+  updateDeltaTime(timestamp) {
+    this.deltaTime = (timestamp - this.lastTimeStamp) / this.targetFrameRate;
+    this.lastTimeStamp = timestamp;
   }
 }

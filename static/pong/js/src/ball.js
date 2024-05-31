@@ -10,7 +10,7 @@ export default class Ball extends THREE.Mesh {
       fast: 0xff5733,
     },
 
-    speed = 0.25,
+    speed = 0.8,
     position = {
       x: 0,
       y: 0,
@@ -29,6 +29,7 @@ export default class Ball extends THREE.Mesh {
 
     this.speed = speed;
     this.startSpeed = speed * 0.5;
+    this.fastSpeed = speed * 1.35;
 
     this.velocity = {
       x: this.startSpeed,
@@ -45,8 +46,8 @@ export default class Ball extends THREE.Mesh {
 
   update(arena, paddleL, paddleR) {
     const nextPos = {
-      x: this.position.x + this.velocity.x,
-      z: this.position.z + this.velocity.z,
+      x: this.position.x + this.velocity.x * this.gameManager.deltaTime,
+      z: this.position.z + this.velocity.z * this.gameManager.deltaTime,
     };
     if (this.checkGoal(arena, nextPos)) {
       paddleL.canCollideWithBall = true;
@@ -63,8 +64,8 @@ export default class Ball extends THREE.Mesh {
       paddleL.canCollideWithBall = true;
       this.updateVelocity(nextPos.z, paddleR);
     }
-    this.position.x += this.velocity.x;
-    this.position.z += this.velocity.z;
+    this.position.x += this.velocity.x * this.gameManager.deltaTime;
+    this.position.z += this.velocity.z * this.gameManager.deltaTime;
   }
 
   checkWallHCollision(arena, nextPos) {
@@ -109,7 +110,7 @@ export default class Ball extends THREE.Mesh {
     const maxBounceAngle = Math.PI / 4;
     const bounceAngle = normalizedDelta * maxBounceAngle;
     const currentSpeed = this.checkPaddleSideCollision(paddle)
-      ? this.speed * 1.35
+      ? this.fastSpeed
       : this.speed;
     this.velocity.x =
       Math.sign(this.velocity.x) * -Math.cos(bounceAngle) * currentSpeed;

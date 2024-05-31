@@ -16,6 +16,9 @@ const gameHeight = innerHeight / 1.2;
 const arenaWidth = 50;
 const arenaDepth = 30;
 
+const targetFrameRate = 1000 / 60; // 60fps
+let deltaTime = 0;
+
 const backgroundImage = new THREE.TextureLoader().load(
   "static/pong/img/Starfield.png",
 );
@@ -98,6 +101,7 @@ const paddleL = new Paddle({
     z: 0,
   },
   arenaDepth: arena.depth,
+  gameManager: gameManager,
 });
 scene.add(paddleL);
 
@@ -111,10 +115,12 @@ const paddleR = new Paddle({
     z: 0,
   },
   arenaDepth: arena.depth,
+  gameManager: gameManager,
 });
 scene.add(paddleR);
 
-function animationLoop(_) {
+function animationLoop(timestamp) {
+  gameManager.updateDeltaTime(timestamp);
   inputManager.handleInput();
   paddleL.update(inputManager.paddleLInputZ);
   paddleR.update(inputManager.paddleRInputZ);

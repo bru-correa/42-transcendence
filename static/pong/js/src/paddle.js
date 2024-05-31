@@ -6,18 +6,21 @@ export default class Paddle extends THREE.Mesh {
     height = 0.5,
     depth = 3.5,
     color = "#ffffff",
-    speed = 0.2,
+    speed = 0.6,
     position = {
       x: 0,
       y: 0,
       z: 0,
     },
     arenaDepth,
+    gameManager,
   }) {
     super(
       new THREE.BoxGeometry(width, height, depth),
       new THREE.MeshBasicMaterial({ color }),
     );
+
+    this.gameManager = gameManager;
 
     this.width = width;
     this.height = height;
@@ -36,7 +39,7 @@ export default class Paddle extends THREE.Mesh {
   }
 
   update(paddleInputZ) {
-    this.velocity = paddleInputZ * this.speed;
+    this.velocity = paddleInputZ * this.speed * this.gameManager.deltaTime;
     this.updateCollisionPoints();
     if (this.checkCollision() == false) this.position.z += this.velocity;
   }
