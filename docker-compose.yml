@@ -4,7 +4,7 @@ services:
       context: .
     restart: on-failure:5
     ports:
-      - "80:8000"
+      - "8000:8000"
     volumes:
       - .:/app
     command:
@@ -16,8 +16,6 @@ services:
         gunicorn -c gunicorn_config.py
     depends_on:
       - postgres
-    networks:
-      - postgres_nw
 
   postgres:
     image: postgres:16.3-alpine
@@ -29,11 +27,19 @@ services:
       POSTGRES_DB: transcendence_db
     ports:
       - 5432:5432
-    networks:
-      - postgres_nw
     volumes:
       - ./postgres:/var/lib/postgresql/data
 
-networks:
-  postgres_nw:
-    driver: bridge
+  nginx:
+    container_name: nginx
+    image: nginx:alpine
+    restart: on-failure:5
+    ports:
+      - "443:443"
+    volumes:
+      - ./static:/var/www/static
+      - ./media:/var/www/media
+      - ./nginx/certs:/etc/nginx/certs
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - django
