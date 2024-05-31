@@ -6,7 +6,7 @@ export default class Paddle extends THREE.Mesh {
     height = 0.5,
     depth = 3.5,
     color = "#ffffff",
-    speed = 0.15,
+    speed = 0.2,
     position = {
       x: 0,
       y: 0,

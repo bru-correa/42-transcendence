@@ -77,13 +77,27 @@ export default class Ball extends THREE.Mesh {
   }
 
   updateVelocity(intersectX, intersectZ, paddle) {
-    const relativeDelta = paddle.position.z - intersectZ;
+    const relativeDelta = intersectZ - paddle.position.z;
     const normalizedDelta = relativeDelta / (paddle.depth / 2);
     const maxBounceAngle = Math.PI / 4;
     const bounceAngle = normalizedDelta * maxBounceAngle;
+    this.checkPaddleSideCollision(paddle);
     this.velocity.x =
       Math.sign(this.velocity.x) * -Math.cos(bounceAngle) * this.speed;
-    this.velocity.z =
-      Math.sign(this.velocity.z) * Math.sin(bounceAngle) * this.speed;
+    this.velocity.z = Math.sin(bounceAngle) * this.speed;
+  }
+
+  // TODO: One collision at time
+  checkPaddleSideCollision(paddle) {
+    if (
+      this.position.z + this.radius <= paddle.topSide ||
+      this.position.z - this.radius >= paddle.bottomSide
+    ) {
+      if (Math.sign(paddle.position.x) > 0) {
+        this.position.x = paddle.position.x - paddle.depth / 2 - this.radius;
+      } else {
+        this.position.x = paddle.position.x + paddle.depth / 2 + this.radius;
+      }
+    }
   }
 }
