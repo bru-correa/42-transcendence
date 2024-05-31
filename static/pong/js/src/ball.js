@@ -10,6 +10,7 @@ export default class Ball extends THREE.Mesh {
       y: 0,
       z: 0,
     },
+    gameManager,
   }) {
     super(
       new THREE.SphereGeometry(radius),
@@ -21,12 +22,17 @@ export default class Ball extends THREE.Mesh {
     this.position.set(position.x, position.y, position.z);
 
     this.speed = speed;
+    this.startSpeed = speed * 0.5;
 
     this.velocity = {
-      x: this.speed,
+      x: this.startSpeed,
       y: 0,
-      z: this.speed,
+      z: this.startSpeed,
     };
+
+    this.startSide = "L";
+
+    this.gameManager = gameManager;
   }
 
   update(arena, paddleL, paddleR) {
@@ -34,10 +40,12 @@ export default class Ball extends THREE.Mesh {
       x: this.position.x + this.velocity.x,
       z: this.position.z + this.velocity.z,
     };
+    if (this.checkGoal(arena, nextPos)) {
+      paddleL.canCollideWithBall = true;
+      paddleR.canCollideWithBall = true;
+    }
     if (this.checkWallHCollision(arena, nextPos)) {
       this.velocity.z *= -1;
-    } else if (this.checkWallVCollision(arena, nextPos)) {
-      this.velocity.x *= -1;
     } else if (this.checkPaddleColision(paddleL, nextPos)) {
       paddleL.canCollideWithBall = false;
       paddleR.canCollideWithBall = true;
@@ -57,9 +65,16 @@ export default class Ball extends THREE.Mesh {
     return false;
   }
 
-  checkWallVCollision(arena, nextPos) {
-    if (nextPos.x + this.radius >= arena.rightSide) return true;
-    else if (nextPos.x - this.radius <= arena.leftSide) return true;
+  checkGoal(arena, nextPos) {
+    if (nextPos.x + this.radius >= arena.rightSide) {
+      this.gameManager.increaseRScore();
+      this.resetRound();
+      return true;
+    } else if (nextPos.x - this.radius <= arena.leftSide) {
+      this.gameManager.increaseLScore();
+      this.resetRound();
+      return true;
+    }
     return false;
   }
 
@@ -98,5 +113,19 @@ export default class Ball extends THREE.Mesh {
       this.position.z >= paddle.bottomSide
     )
       return true;
+  }
+
+  resetRound() {
+    this.position.x = 0;
+    this.position.z = 0;
+    if (this.startSide === "L") {
+      this.velocity.z = 0;
+      this.velocity.x = -this.startSpeed;
+      this.startSide = "R";
+    } else if (this.startSide === "R") {
+      this.velocity.z = 0;
+      this.velocity.x = this.startSpeed;
+      this.startSide = "L";
+    }
   }
 }

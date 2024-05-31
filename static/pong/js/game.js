@@ -7,6 +7,7 @@ import Paddle from "./src/paddle.js";
 import PostProcessing from "./src/post-processing.js";
 import InputManager from "./src/input-manager.js";
 import Ball from "./src/ball.js";
+import GameManager from "./src/game-manager.js";
 
 // TODO: Move these global variables
 const gameWidth = innerWidth / 1.2;
@@ -57,6 +58,10 @@ postProcessing.setup();
 
 const inputManager = new InputManager({});
 
+const gameManager = new GameManager({
+  maxScore: 3,
+});
+
 const arena = new Arena({
   width: arenaWidth,
   height: 2,
@@ -78,6 +83,7 @@ const ball = new Ball({
     y: arena.height / 2 + ballRadius,
     z: 0,
   },
+  gameManager: gameManager,
 });
 scene.add(ball);
 
@@ -109,7 +115,6 @@ const paddleR = new Paddle({
 scene.add(paddleR);
 
 function animationLoop(_) {
-  // ball.rotation.set(Math.sin(t / 700), Math.cos(t / 800), 0);
   inputManager.handleInput();
   paddleL.update(inputManager.paddleLInputZ);
   paddleR.update(inputManager.paddleRInputZ);
