@@ -30,45 +30,43 @@ export default class Ball extends THREE.Mesh {
   }
 
   update(arena, paddleL, paddleR) {
-    const nextPosX = this.position.x + this.velocity.x;
-    const nextPosZ = this.position.z + this.velocity.z;
-    if (this.checkWallHCollision(arena)) {
+    const nextPos = {
+      x: this.position.x + this.velocity.x,
+      z: this.position.z + this.velocity.z,
+    };
+    if (this.checkWallHCollision(arena, nextPos)) {
       this.velocity.z *= -1;
-    } else if (this.checkWallVCollision(arena)) {
+    } else if (this.checkWallVCollision(arena, nextPos)) {
       this.velocity.x *= -1;
-    } else if (this.checkPaddleColision(paddleL)) {
-      this.updateVelocity(nextPosX, nextPosZ, paddleL);
-    } else if (this.checkPaddleColision(paddleR)) {
-      this.updateVelocity(nextPosX, nextPosZ, paddleR);
+    } else if (this.checkPaddleColision(paddleL, nextPos)) {
+      this.updateVelocity(nextPos.z, paddleL);
+    } else if (this.checkPaddleColision(paddleR, nextPos)) {
+      this.updateVelocity(nextPos.z, paddleR);
     }
     this.position.x += this.velocity.x;
     this.position.z += this.velocity.z;
   }
 
-  checkWallHCollision(arena) {
-    const nextPosZ = this.position.z + this.velocity.z;
-    if (nextPosZ - this.radius <= arena.topSide) return true;
-    else if (nextPosZ + this.radius >= arena.bottomSide) return true;
+  checkWallHCollision(arena, nextPos) {
+    if (nextPos.z - this.radius <= arena.topSide) return true;
+    else if (nextPos.z + this.radius >= arena.bottomSide) return true;
     return false;
   }
 
-  checkWallVCollision(arena) {
-    const nextPosX = this.position.x + this.velocity.x;
-    if (nextPosX + this.radius >= arena.rightSide) return true;
-    else if (nextPosX - this.radius <= arena.leftSide) return true;
+  checkWallVCollision(arena, nextPos) {
+    if (nextPos.x + this.radius >= arena.rightSide) return true;
+    else if (nextPos.x - this.radius <= arena.leftSide) return true;
     return false;
   }
 
-  checkPaddleColision(paddle) {
-    const nextPosX = this.position.x + this.velocity.x;
-    const nextPosZ = this.position.z + this.velocity.z;
+  checkPaddleColision(paddle, nextPos) {
     if (
-      nextPosX + this.radius >= paddle.leftSide &&
-      nextPosX - this.radius <= paddle.rightSide
+      nextPos.x + this.radius >= paddle.leftSide &&
+      nextPos.x - this.radius <= paddle.rightSide
     ) {
       if (
-        nextPosZ - this.radius <= paddle.bottomSide &&
-        nextPosZ + this.radius >= paddle.topSide
+        nextPos.z - this.radius <= paddle.bottomSide &&
+        nextPos.z + this.radius >= paddle.topSide
       ) {
         return true;
       }
@@ -76,7 +74,7 @@ export default class Ball extends THREE.Mesh {
     return false;
   }
 
-  updateVelocity(intersectX, intersectZ, paddle) {
+  updateVelocity(intersectZ, paddle) {
     const relativeDelta = intersectZ - paddle.position.z;
     const normalizedDelta = relativeDelta / (paddle.depth / 2);
     const maxBounceAngle = Math.PI / 4;
