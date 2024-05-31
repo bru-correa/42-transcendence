@@ -3,7 +3,13 @@ import * as THREE from "../three/three.module.js";
 export default class Ball extends THREE.Mesh {
   constructor({
     radius = 2,
-    color = "#ffff00",
+
+    colors = {
+      slow: 0xffff99,
+      normal: 0xffff00,
+      fast: 0xff5733,
+    },
+
     speed = 0.25,
     position = {
       x: 0,
@@ -14,7 +20,7 @@ export default class Ball extends THREE.Mesh {
   }) {
     super(
       new THREE.SphereGeometry(radius),
-      new THREE.MeshBasicMaterial({ color }),
+      new THREE.MeshBasicMaterial({ color: colors.slow }),
     );
 
     this.radius = radius;
@@ -27,8 +33,10 @@ export default class Ball extends THREE.Mesh {
     this.velocity = {
       x: this.startSpeed,
       y: 0,
-      z: this.startSpeed,
+      z: 0,
     };
+
+    this.colors = colors;
 
     this.startSide = "L";
 
@@ -60,8 +68,9 @@ export default class Ball extends THREE.Mesh {
   }
 
   checkWallHCollision(arena, nextPos) {
-    if (nextPos.z - this.radius <= arena.topSide) return true;
-    else if (nextPos.z + this.radius >= arena.bottomSide) return true;
+    if (nextPos.z - this.radius <= arena.topSide) {
+      return true;
+    } else if (nextPos.z + this.radius >= arena.bottomSide) return true;
     return false;
   }
 
@@ -111,13 +120,19 @@ export default class Ball extends THREE.Mesh {
     if (
       this.position.z <= paddle.topSide ||
       this.position.z >= paddle.bottomSide
-    )
+    ) {
+      this.material.color.setHex(this.colors.fast);
       return true;
+    } else {
+      this.material.color.setHex(this.colors.normal);
+      return false;
+    }
   }
 
   resetRound() {
     this.position.x = 0;
     this.position.z = 0;
+    this.material.color.setHex(this.colors.slow);
     if (this.startSide === "L") {
       this.velocity.z = 0;
       this.velocity.x = -this.startSpeed;

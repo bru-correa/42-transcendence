@@ -90,7 +90,7 @@ scene.add(ball);
 // Player 1
 const paddleHeight = 0.5;
 const paddleL = new Paddle({
-  color: "#FF0000",
+  color: 0xff007f,
   height: paddleHeight,
   position: {
     x: -20,
@@ -103,7 +103,7 @@ scene.add(paddleL);
 
 // Player 2
 const paddleR = new Paddle({
-  color: "#00FF00",
+  color: 0x0fff50,
   height: paddleHeight,
   position: {
     x: 20,
