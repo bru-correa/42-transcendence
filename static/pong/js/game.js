@@ -9,15 +9,11 @@ import InputManager from "./src/input-manager.js";
 import Ball from "./src/ball.js";
 import GameManager from "./src/game-manager.js";
 
-// TODO: Move these global variables
 const gameWidth = innerWidth / 1.2;
 const gameHeight = innerHeight / 1.2;
 
 const arenaWidth = 50;
 const arenaDepth = 30;
-
-const targetFrameRate = 1000 / 60; // 60fps
-let deltaTime = 0;
 
 const backgroundImage = new THREE.TextureLoader().load(
   "static/pong/img/Starfield.png",
