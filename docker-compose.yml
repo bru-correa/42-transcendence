@@ -19,14 +19,14 @@ services:
 
   postgres:
     image: postgres:16.3-alpine
-    container_name: postgres
+    container_name: ${DB_HOST}
     restart: on-failure:5
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: postgres
-      POSTGRES_DB: transcendence_db
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:${DB_PORT}"
     volumes:
       - ./postgres:/var/lib/postgresql/data
 
