@@ -9,8 +9,8 @@ import InputManager from "./src/input-manager.js";
 import Ball from "./src/ball.js";
 import GameManager from "./src/game-manager.js";
 
-const gameWidth = innerWidth / 1.2;
-const gameHeight = innerHeight / 1.2;
+const gameWidth = innerWidth / 1.4;
+const gameHeight = innerHeight / 1.4;
 
 const arenaWidth = 50;
 const arenaDepth = 30;
@@ -28,11 +28,13 @@ const camera = new THREE.PerspectiveCamera(45, gameWidth / gameHeight);
 camera.position.set(0, 52, 10);
 
 // Setup renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const gameCanvas = document.getElementById("game");
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  canvas: gameCanvas,
+});
 renderer.setSize(gameWidth, gameHeight);
 renderer.setAnimationLoop(animationLoop);
-const gameDiv = document.getElementById("game");
-gameDiv.appendChild(renderer.domElement);
 
 new OrbitControls(camera, renderer.domElement);
 
