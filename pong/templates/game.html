@@ -6,5 +6,22 @@
   <script src="{% static 'pong/js/game.js' %}" type="module"></script>
 {% endblock scripts %}
 {% block content %}
-  <div id="game" class="container mx-auto mt-5"></div>
+  <div class="d-flex">
+    {% include "./components/sidebar.html" %}
+    <div class="mx-auto">
+      <div class="d-flex justify-content-evenly mt-5">
+        <div id="player-l" class="fs-3">
+          <span id="player-l-name" class="fw-bold">Player L</span>
+          :
+          <span id="player-l-score">4</span>
+        </div>
+        <div id="player-r" class="fs-3">
+          <span id="player-r-name" class="fw-bold">Player R</span>
+          :
+          <span id="player-r-score">2</span>
+        </div>
+      </div>
+      <canvas id="game" class="d-block mx-auto mt-1" />
+    </div>
+  </div>
 {% endblock content %}

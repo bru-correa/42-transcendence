@@ -9,9 +9,9 @@
           rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous" />
-    {% load static %}
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     {% block scripts %}
-      {% include "./components/scripts.html" %}
     {% endblock scripts %}
   </head>
   <title>
@@ -20,9 +20,6 @@
     {% endblock title %}
   </title>
   <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <a class="navbar-brand" href="#">Transcendence</a>
-    </nav>
     <div id="app">
       {% block content %}
         insert content here
