@@ -29,7 +29,7 @@ class User(models.Model):
 	session_key = models.CharField(blank=True, null=True, max_length=40)
 
 	created_at = models.DateTimeField(default=timezone.now)
-	updated_at = models.AutoDateTimeField(default=timezone.now)
+	updated_at = AutoDateTimeField(default=timezone.now)
 	last_login = models.DateTimeField(null=True)
 
 # 1v1 Games Match History
