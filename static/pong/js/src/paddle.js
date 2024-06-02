@@ -36,6 +36,8 @@ export default class Paddle extends THREE.Mesh {
     this.wallDistanceFromCenter = Math.abs(arenaDepth / 2);
 
     this.canCollideWithBall = true;
+
+    this.startPosX = position.x;
   }
 
   update(paddleInputZ) {
@@ -56,5 +58,11 @@ export default class Paddle extends THREE.Mesh {
       Math.abs(this.position.z + this.velocity) + Math.abs(this.depth / 2);
     if (playerCollisionDelta < this.wallDistanceFromCenter) return false;
     return true;
+  }
+
+  resetGame() {
+    this.position.x = this.startPosX;
+    this.position.z = 0;
+    this.canCollideWithBall = true;
   }
 }

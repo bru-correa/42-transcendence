@@ -26,11 +26,16 @@
            style="width: 75dvw;
                   height: 75dvh">
         <div id="game-over"
-             class="d-block position-absolute z-1 w-50 h-50 bg-secondary-subtle"
+             class="flex-column align-items-center justify-content-around position-absolute z-1 w-50 h-50 bg-secondary-subtle rounded-3"
              style="top: 25%;
-                    left: 25%">
-          <span id="popup-winner-name">intra_nickname</span>
-          <button class="w-80">Rematch</button>
+                    left: 25%;
+                    display: none">
+          <div class="text-center fs-3">
+            <span id="popup-winner-name">intra_nickname</span>
+            <span>won!</span>
+          </div>
+          <button id="play-again" type="button" class="btn w-75 btn-primary fw-bold">PLAY AGAIN</button>
+          <a type="button" class="btn w-75 btn-secondary fw-bold" href="/play">CLOSE</a>
         </div>
         <canvas id="game-canvas" class="d-block mx-auto mt-1 position-absolute" />
       </div>

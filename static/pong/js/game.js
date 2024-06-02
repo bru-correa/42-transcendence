@@ -9,8 +9,6 @@ import InputManager from "./src/input-manager.js";
 import Ball from "./src/ball.js";
 import GameManager from "./src/game-manager.js";
 
-// const gameWidth = innerWidth / 1.4;
-// const gameHeight = innerHeight / 1.4;
 const gameWrapper = document.getElementById("game-wrapper");
 const gameWidth = gameWrapper.offsetWidth;
 const gameHeight = gameWrapper.offsetHeight;
@@ -129,3 +127,12 @@ function animationLoop(timestamp) {
   ball.update(arena, paddleL, paddleR);
   postProcessing.render();
 }
+
+function resetGame() {
+  ball.resetGame();
+  paddleL.resetGame();
+  paddleR.resetGame();
+  gameManager.resetGame();
+}
+const playAgainButton = document.getElementById("play-again");
+playAgainButton.addEventListener("click", resetGame);

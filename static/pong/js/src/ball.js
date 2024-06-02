@@ -52,6 +52,7 @@ export default class Ball extends THREE.Mesh {
     if (this.checkGoal(arena, nextPos)) {
       paddleL.canCollideWithBall = true;
       paddleR.canCollideWithBall = true;
+      return;
     }
     if (this.checkWallHCollision(arena, nextPos)) {
       this.velocity.z *= -1;
@@ -77,11 +78,11 @@ export default class Ball extends THREE.Mesh {
 
   checkGoal(arena, nextPos) {
     if (nextPos.x + this.radius >= arena.rightSide) {
-      this.gameManager.increaseRScore();
+      this.gameManager.increaseLScore();
       this.resetRound();
       return true;
     } else if (nextPos.x - this.radius <= arena.leftSide) {
-      this.gameManager.increaseLScore();
+      this.gameManager.increaseRScore();
       this.resetRound();
       return true;
     }
@@ -143,5 +144,14 @@ export default class Ball extends THREE.Mesh {
       this.velocity.x = this.startSpeed;
       this.startSide = "L";
     }
+  }
+
+  resetGame() {
+    this.position.x = 0;
+    this.position.z = 0;
+    this.material.color.setHex(this.colors.slow);
+    this.startSide = "L";
+    this.velocity.x = -this.startSpeed;
+    this.velocity.z = 0;
   }
 }
