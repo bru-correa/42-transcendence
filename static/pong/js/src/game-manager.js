@@ -11,24 +11,40 @@ export default class GameManager {
     this.previousTime = performance.now();
 
     this.lastTimeStamp = 0;
+
+    this.playerLSpan = document.getElementById("player-l-score");
+    this.playerRSpan = document.getElementById("player-r-score");
+    this.setScoreSpans();
+
+    this.gameOver = false;
+  }
+
+  setScoreSpans() {
+    this.playerLSpan.innerHTML = this.playerLScore;
+    this.playerRSpan.innerHTML = this.playerRScore;
   }
 
   resetScore() {
     this.playerLScore = 0;
     this.playerRScore = 0;
+    this.setScoreSpans();
   }
 
   increaseLScore() {
     this.playerLScore++;
+    this.playerLSpan.innerHTML = this.playerLScore;
     if (this.playerLScore >= this.maxScore) {
-      console.log("Game Over! The Left Player Won");
+      this.gameOver = true;
+      // Send info to database
     }
   }
 
   increaseRScore() {
     this.playerRScore++;
+    this.playerRSpan.innerHTML = this.playerRScore;
     if (this.playerRScore >= this.maxScore) {
-      console.log("Game Over! The Right Player Won");
+      this.gameOver = true;
+      // Send info to database
     }
   }
 

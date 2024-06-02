@@ -9,8 +9,11 @@ import InputManager from "./src/input-manager.js";
 import Ball from "./src/ball.js";
 import GameManager from "./src/game-manager.js";
 
-const gameWidth = innerWidth / 1.4;
-const gameHeight = innerHeight / 1.4;
+// const gameWidth = innerWidth / 1.4;
+// const gameHeight = innerHeight / 1.4;
+const gameWrapper = document.getElementById("game-wrapper");
+const gameWidth = gameWrapper.offsetWidth;
+const gameHeight = gameWrapper.offsetHeight;
 
 const arenaWidth = 50;
 const arenaDepth = 30;
@@ -28,7 +31,7 @@ const camera = new THREE.PerspectiveCamera(45, gameWidth / gameHeight);
 camera.position.set(0, 52, 10);
 
 // Setup renderer
-const gameCanvas = document.getElementById("game");
+const gameCanvas = document.getElementById("game-canvas");
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
   canvas: gameCanvas,
@@ -60,7 +63,7 @@ postProcessing.setup();
 const inputManager = new InputManager({});
 
 const gameManager = new GameManager({
-  maxScore: 3,
+  maxScore: 5,
 });
 
 const arena = new Arena({
@@ -118,6 +121,7 @@ const paddleR = new Paddle({
 scene.add(paddleR);
 
 function animationLoop(timestamp) {
+  if (gameManager.gameOver) return;
   gameManager.updateDeltaTime(timestamp);
   inputManager.handleInput();
   paddleL.update(inputManager.paddleLInputZ);

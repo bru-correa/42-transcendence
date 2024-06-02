@@ -11,17 +11,29 @@
     <div class="mx-auto">
       <div class="d-flex justify-content-evenly mt-5">
         <div id="player-l" class="fs-3">
-          <span id="player-l-name" class="fw-bold">Player L</span>
+          <span id="player-l-name" class="fw-bold">Nickname</span>
           :
-          <span id="player-l-score">4</span>
+          <span id="player-l-score"></span>
         </div>
         <div id="player-r" class="fs-3">
-          <span id="player-r-name" class="fw-bold">Player R</span>
+          <span id="player-r-name" class="fw-bold">Guest</span>
           :
-          <span id="player-r-score">2</span>
+          <span id="player-r-score"></span>
         </div>
       </div>
-      <canvas id="game" class="d-block mx-auto mt-1" />
+      <div id="game-wrapper"
+           class="position-relative"
+           style="width: 75dvw;
+                  height: 75dvh">
+        <div id="game-over"
+             class="d-block position-absolute z-1 w-50 h-50 bg-secondary-subtle"
+             style="top: 25%;
+                    left: 25%">
+          <span id="popup-winner-name">intra_nickname</span>
+          <button class="w-80">Rematch</button>
+        </div>
+        <canvas id="game-canvas" class="d-block mx-auto mt-1 position-absolute" />
+      </div>
     </div>
   </div>
 {% endblock content %}
