@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django_browser_reload",
     "django.contrib.staticfiles",
     "pong",
 ]
@@ -52,10 +51,14 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = "transcendence.urls"
+
+default_loaders = [
+    "django.template.loaders.filesystem.Loader",
+    "django.template.loaders.app_directories.Loader",
+]
 
 TEMPLATES = [
     {
@@ -69,6 +72,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
+            "loaders": default_loaders
         },
     },
 ]

@@ -1,3 +1,7 @@
 [tool.djlint]
 indent=2
 profile="django"
+[tool.pyright]
+exclude=".venv"
+venvPath="."
+venv=".venv"
