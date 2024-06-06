@@ -1,4 +1,4 @@
-from django.shortcuts import HttpResponse, render
+from django.shortcuts import render
 
 # Create your views here.
 def get_home_page(request):
