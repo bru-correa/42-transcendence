@@ -34,7 +34,7 @@ services:
       - ./postgres:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -U ${DB_USER}
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
 

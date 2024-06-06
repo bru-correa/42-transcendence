@@ -1,6 +1,8 @@
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
+from django.core.exceptions import BadRequest
 from urllib.parse import urlencode, quote_plus
 import os
 import requests
@@ -12,6 +14,7 @@ INTRA_AUTH_URL = "https://api.intra.42.fr/oauth/authorize?" + urlencode({
 	},
 	quote_via=quote_plus)
 
+@login_required(login_url="/login")
 def manage_logout(request):
     logout(request)
     return redirect('/login')
@@ -23,6 +26,8 @@ def intra_login(request):
 # After logging in on Intra, user is redirected here with a code
 def intra_login_redirect(request: HttpRequest):
 	intra_code = request.GET.get('code')
+	if intra_code is None:
+		raise BadRequest('Failure to retrieved code from request')
 	intra_user = get_intra_user_from_code(intra_code)
 	try:
 		authorized_user = authenticate(request=request,user=intra_user['login'])
