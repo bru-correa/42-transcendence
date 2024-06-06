@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
 
 MAX_UPLOAD_SIZE = 5 * 1024 * 1024
 
@@ -54,6 +54,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "transcendence.urls"
+
+AUTH_USER_MODEL = "pong.User"
+
+AUTHENTICATION_BACKENDS = [
+    "pong.auth.UserBackend",
+]
 
 default_loaders = [
     "django.template.loaders.filesystem.Loader",
@@ -132,7 +138,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 # MEDIA_URL = '/media/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "static/"),
 ]
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #
@@ -144,6 +150,10 @@ CSRF_TRUSTED_ORIGINS = ["https://localhost"]
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+MEDIA_URL = "media/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 CACHES = {
     'default': {

@@ -4,6 +4,7 @@ from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
 from django.conf import settings
 import uuid
+from django.contrib.auth.models import AbstractUser
 
 def file_size_validator(file):
     if file.size > settings.MAX_UPLOAD_SIZE:
@@ -13,12 +14,13 @@ class AutoDateTimeField(models.DateTimeField):
     def pre_save(self, model_instance, add):
         return timezone.now()
 
-class User(models.Model):
+class User(AbstractUser):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	intra_name = models.CharField(max_length=150, unique=True, blank=False, null=False)
+	USERNAME_FIELD = "intra_name"
 	display_name = models.CharField(max_length=150, unique=False)
 	def save(self, *args, **kwargs): # On creation, display_name = intra_name
-		if not self.id:
+		if not self.display_name:
 			self.display_name = self.intra_name
 		super().save(*args, **kwargs)
 
