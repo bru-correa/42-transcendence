@@ -7,3 +7,4 @@ django-browser-reload==1.12.1
 psycopg2-binary==2.9.9
 django-stubs==5.0.2
 django-stubs-ext==5.0.2
+requests==2.32.3

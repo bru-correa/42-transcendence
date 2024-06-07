@@ -21,7 +21,11 @@ restart:
 down clean:
 	$(COMPOSE_CMD) down
 
-fclean:
+dbclean: clean
+	rm -rf pong/migrations/0*
+	sudo rm -rf ./postgres
+
+fclean: dbclean
 	$(COMPOSE_CMD) down --rmi all --remove-orphans -v
 
 preclean:
