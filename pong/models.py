@@ -1,10 +1,10 @@
+import uuid
 from django.db import models
-from django.utils import timezone
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
-from django.conf import settings
-import uuid
-from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 def file_size_validator(file):
     if file.size > settings.MAX_UPLOAD_SIZE:
