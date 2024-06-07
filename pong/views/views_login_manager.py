@@ -1,11 +1,11 @@
-from django.shortcuts import redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse
-from django.core.exceptions import BadRequest
-from urllib.parse import urlencode, quote_plus
 import os
 import requests
+from django.core.exceptions import BadRequest
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import redirect
+from urllib.parse import urlencode, quote_plus
 
 INTRA_AUTH_URL = "https://api.intra.42.fr/oauth/authorize?" + urlencode({
 	'client_id': os.environ.get('FT_CLIENT_ID'),
@@ -38,9 +38,7 @@ def intra_login_redirect(request: HttpRequest):
 
 	except Exception as e:
 		print(f"Intra login authentication error: {e}")
-	response = HttpResponse('Failure to authenticate')
-	response.status_code = 401
-	return response
+	return JsonResponse({'error': 'Failure to authenticate'}, status=401)
 
 # We use the code to obtain the user's public data
 def get_intra_user_from_code(code: str):
