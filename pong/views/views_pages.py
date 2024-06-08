@@ -23,3 +23,7 @@ def get_stats_page(request):
 @login_required(login_url="/login")
 def get_tournament_page(request):
     return render(request, "pages/tournament.html")
+
+@login_required(login_url="/login")
+def get_tournament_form_page(request):
+    return render(request, "pages/tournamentForm.html")
