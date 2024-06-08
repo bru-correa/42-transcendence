@@ -38,9 +38,6 @@ class User(AbstractUser):
 	created_at = models.DateTimeField(default=timezone.now)
 	updated_at = AutoDateTimeField(default=timezone.now)
 
-	#? Is this field necessary?
-	last_login = models.DateTimeField(null=True)
-
 	def __str__(self):
 		return f"{self.id}"
 
@@ -57,13 +54,14 @@ class MatchHistory(models.Model):
     finished_at = models.DateTimeField(default=timezone.now)
 
 class Relationship(models.Model):
-	user1 = models.ForeignKey(User, related_name='friendship_from_user1', on_delete=models.CASCADE)
-	user2 = models.ForeignKey(User, related_name='friendship_from_user2', on_delete=models.CASCADE)
+	user1 = models.ForeignKey(User, related_name='friendship_from_user1', on_delete=models.CASCADE, editable=False)
+	user2 = models.ForeignKey(User, related_name='friendship_from_user2', on_delete=models.CASCADE, editable=False)
 
 	user1_is_friendly = models.BooleanField(default=False)
 	user2_is_friendly = models.BooleanField(default=False)
 	def is_friendship(self):
 		return self.user1_is_friendly and self.user2_is_friendly
+	is_blocked = models.BooleanField(default=False)
 
 	class Meta:
 		constraints = [
