@@ -17,7 +17,7 @@ const arenaWidth = 50;
 const arenaDepth = 30;
 
 const backgroundImage = new THREE.TextureLoader().load(
-  "static/pong/img/Starfield.png",
+  "/static/pong/img/Starfield.png",
 );
 
 // Boilerplate

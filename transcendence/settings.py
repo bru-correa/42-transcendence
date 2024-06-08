@@ -17,7 +17,6 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -30,6 +29,8 @@ DEBUG = False
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
 
 MAX_UPLOAD_SIZE = 5 * 1024 * 1024
+
+APPEND_SLASH = True
 
 # Application definition
 
@@ -136,13 +137,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
-# MEDIA_URL = '/media/'
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static/"),
 ]
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#
 # STATIC_ROOT = 'staticfiles'
+
+MEDIA_URL = "media/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 CSRF_TRUSTED_ORIGINS = ["https://localhost"]
 
@@ -150,10 +153,6 @@ CSRF_TRUSTED_ORIGINS = ["https://localhost"]
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-MEDIA_URL = "media/"
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 CACHES = {
     'default': {
