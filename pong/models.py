@@ -1,23 +1,44 @@
 import uuid
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 def file_size_validator(file):
-    if file.size > settings.MAX_UPLOAD_SIZE:
-        raise ValidationError('File size exceeds the 5 MiB limit.')
+	if file.size > settings.MAX_UPLOAD_SIZE:
+		raise ValidationError('File size exceeds the 5 MiB limit.')
 
 class AutoDateTimeField(models.DateTimeField):
-    def pre_save(self, model_instance, add):
-        return timezone.now()
+	def pre_save(self, model_instance, add):
+		return timezone.now()
 
-class User(AbstractUser):
+class IntraUserManager(BaseUserManager):
+	def create_user(self, intra_name):
+		user = self.model(
+			intra_name = intra_name,
+		)
+		user.is_superuser = False
+		user.save(using=self._db)
+		return user
+
+	def create_superuser(self, intra_name):
+		user = self.model(
+			intra_name = intra_name,
+			# is_superuser = True
+		)
+		user.is_superuser = True
+		user.save(using=self._db)
+		return user
+
+class User(AbstractBaseUser):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	intra_name = models.CharField(max_length=150, unique=True, blank=False, null=False)
+
+	objects = IntraUserManager()
 	USERNAME_FIELD = "intra_name"
+
 	display_name = models.CharField(max_length=150, unique=True)
 	def save(self, *args, **kwargs): # On creation, display_name = intra_name
 		if not self.display_name:
@@ -29,12 +50,12 @@ class User(AbstractUser):
 		super().save(*args, **kwargs)
 
 	avatar = models.FileField(
-        blank=True,
-        null=True,
-        default='default_avatar.svg',
-        validators=[
-            FileExtensionValidator(allowed_extensions=['svg', 'png', 'jpg', 'jpeg']),
-            file_size_validator
+		blank=True,
+		null=True,
+		default='default_avatar.svg',
+		validators=[
+			FileExtensionValidator(allowed_extensions=['svg', 'png', 'jpg', 'jpeg']),
+			file_size_validator
 		])
 
 	session_key = models.CharField(blank=True, null=True, max_length=40)
@@ -47,15 +68,13 @@ class User(AbstractUser):
 
 # 1v1 Games Match History
 class MatchHistory(models.Model):
-    user = models.ForeignKey(User, related_name='matches', on_delete=models.CASCADE)
-    user_score = models.IntegerField(default=0)
+	user = models.ForeignKey(User, related_name='matches', on_delete=models.CASCADE)
+	user_score = models.IntegerField(default=0)
 
-    opponent_display_name = models.CharField(max_length=150, blank=False, null=False)
-    opponent_score = models.IntegerField(default=0)
+	opponent_display_name = models.CharField(max_length=150, blank=False, null=False)
+	opponent_score = models.IntegerField(default=0)
 
-    match_result = models.BooleanField(default=False)	# True: Victory, False: Defeat
-
-    finished_at = models.DateTimeField(default=timezone.now)
+	finished_at = models.DateTimeField(default=timezone.now)
 
 class Relationship(models.Model):
 	user1 = models.ForeignKey(User, related_name='friendship_from_user1', on_delete=models.CASCADE, editable=False)
@@ -63,13 +82,10 @@ class Relationship(models.Model):
 
 	user1_is_friendly = models.BooleanField(default=False)
 	user2_is_friendly = models.BooleanField(default=False)
-	def is_friendship(self):
-		return self.user1_is_friendly and self.user2_is_friendly
-	is_blocked = models.BooleanField(default=False)
 
 	class Meta:
 		constraints = [
-            models.UniqueConstraint(fields=['user1', 'user2'], name='unique_relationship')
-        ]
+			models.UniqueConstraint(fields=['user1', 'user2'], name='unique_relationship')
+		]
 	def __str__(self):
 		return f"{self.user1.display_name} - {self.user2.display_name}"
