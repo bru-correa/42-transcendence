@@ -20,6 +20,7 @@ tournamentForm.addEventListener("submit", (event) => {
   const quarters = shuffle(players);
 
   localStorage.clear();
+  localStorage.setItem("gameMode", "tournament");
   localStorage.setItem("quarters", JSON.stringify(quarters));
   localStorage.setItem("currentMatch", "0");
 

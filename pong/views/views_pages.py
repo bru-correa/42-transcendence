@@ -27,3 +27,7 @@ def get_tournament_page(request):
 @login_required(login_url="/login")
 def get_tournament_form_page(request):
     return render(request, "pages/tournamentForm.html")
+
+@login_required(login_url="/login")
+def get_tournament_game_page(request):
+    return render(request, "pages/tournamentGame.html")

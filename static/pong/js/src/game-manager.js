@@ -1,5 +1,5 @@
 export default class GameManager {
-  constructor({ maxScore }) {
+  constructor({ maxScore, gameMode }) {
     this.playerLScore = 0;
     this.playerRScore = 0;
     this.maxScore = maxScore;
@@ -11,6 +11,13 @@ export default class GameManager {
     this.previousTime = performance.now();
 
     this.lastTimeStamp = 0;
+
+    if (gameMode === "tournament") {
+      const playerL = localStorage.getItem("playerL");
+      const playerR = localStorage.getItem("playerR");
+      document.getElementById("player-l-name").innerHTML = playerL;
+      document.getElementById("player-r-name").innerHTML = playerR;
+    }
 
     this.playerLName = document.getElementById("player-l-name").innerHTML;
     this.playerRName = document.getElementById("player-r-name").innerHTML;
@@ -26,6 +33,8 @@ export default class GameManager {
     this.gameOverPopUp = document.getElementById("game-over");
 
     this.unpauseFrame = false;
+
+    this.gameMode = gameMode;
   }
 
   resetScore() {
@@ -41,8 +50,11 @@ export default class GameManager {
     if (this.playerLScore >= this.maxScore) {
       this.gameOver = true;
       this.popupWinnerName.innerHTML = this.playerLName;
-      this.gameOverPopUp.style.display = "flex";
+      if (this.gameMode === "tournament") {
+        this.setTournamentMatchWinner(this.playerLName);
+      }
       // Send info to database
+      this.gameOverPopUp.style.display = "flex";
     }
   }
 
@@ -52,8 +64,11 @@ export default class GameManager {
     if (this.playerRScore >= this.maxScore) {
       this.gameOver = true;
       this.popupWinnerName.innerHTML = this.playerRName;
-      this.gameOverPopUp.style.display = "flex";
+      if (this.gameMode === "tournament") {
+        this.setTournamentMatchWinner(this.playerRName);
+      }
       // Send info to database
+      this.gameOverPopUp.style.display = "flex";
     }
   }
 
@@ -73,5 +88,31 @@ export default class GameManager {
     this.gameOver = false;
     this.deltaTime = 0;
     this.unpauseFrame = true;
+  }
+
+  setTournamentMatchWinner(winner) {
+    const currentMatch = Number(localStorage.getItem("currentMatch"));
+
+    if (currentMatch >= 0 && currentMatch <= 3) {
+      const semiFinals = JSON.parse(localStorage.getItem("semiFinals"));
+      if (!semiFinals) {
+        localStorage.setItem("semiFinals", JSON.stringify([winner]));
+      } else {
+        semiFinals.push(winner);
+        localStorage.setItem("semiFinals", JSON.stringify(semiFinals));
+      }
+    } else if (currentMatch >= 4 && currentMatch <= 5) {
+      const final = JSON.parse(localStorage.getItem("final"));
+      if (!final) {
+        localStorage.setItem("final", JSON.stringify([winner]));
+      } else {
+        final.push(winner);
+        localStorage.setItem("final", JSON.stringify(final));
+      }
+    } else if (currentMatch === 6) {
+      localStorage.setItem("winner", winner);
+    }
+
+    localStorage.setItem("currentMatch", currentMatch + 1);
   }
 }

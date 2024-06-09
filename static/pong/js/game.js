@@ -17,8 +17,10 @@ const arenaWidth = 50;
 const arenaDepth = 30;
 
 const backgroundImage = new THREE.TextureLoader().load(
-  "static/pong/img/Starfield.png",
+  "/static/pong/img/Starfield.png",
 );
+
+const gameMode = localStorage.getItem("gameMode");
 
 // Boilerplate
 const scene = new THREE.Scene();
@@ -62,6 +64,7 @@ const inputManager = new InputManager({});
 
 const gameManager = new GameManager({
   maxScore: 5,
+  gameMode: gameMode,
 });
 
 const arena = new Arena({
@@ -134,5 +137,15 @@ function resetGame() {
   paddleR.resetGame();
   gameManager.resetGame();
 }
-const playAgainButton = document.getElementById("play-again");
-playAgainButton.addEventListener("click", resetGame);
+
+function backToTournament() {
+  window.location.href = "/tournament";
+}
+
+if (gameMode === "tournament") {
+  const backButton = document.getElementById("back");
+  backButton.addEventListener("click", backToTournament);
+} else {
+  const playAgainButton = document.getElementById("play-again");
+  playAgainButton.addEventListener("click", resetGame);
+}
