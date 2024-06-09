@@ -34,7 +34,7 @@ class IntraUserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-	intra_name = models.CharField(max_length=150, unique=True, blank=False, null=False)
+	intra_name = models.CharField(max_length=150, unique=True)
 
 	objects = IntraUserManager()
 	USERNAME_FIELD = "intra_name"
@@ -71,7 +71,7 @@ class MatchHistory(models.Model):
 	user = models.ForeignKey(User, related_name='matches', on_delete=models.CASCADE)
 	user_score = models.IntegerField(default=0)
 
-	opponent_display_name = models.CharField(max_length=150, blank=False, null=False)
+	opponent_display_name = models.CharField(max_length=150)
 	opponent_score = models.IntegerField(default=0)
 
 	finished_at = models.DateTimeField(default=timezone.now)
@@ -80,7 +80,7 @@ class Relationship(models.Model):
 	user1 = models.ForeignKey(User, related_name='friendship_from_user1', on_delete=models.CASCADE, editable=False)
 	user2 = models.ForeignKey(User, related_name='friendship_from_user2', on_delete=models.CASCADE, editable=False)
 
-	user1_is_friendly = models.BooleanField(default=False)
+	user1_is_friendly = models.BooleanField(default=True)
 	user2_is_friendly = models.BooleanField(default=False)
 
 	class Meta:
