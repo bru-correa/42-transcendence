@@ -14,8 +14,7 @@ function loadTournament() {
   const currentMatch = Number(JSON.parse(currentMatchString));
 
   if (winner) {
-    localStorage.clear();
-    console.log(`The winner is ${winner}!`);
+    showSection("/tournament/winner");
   }
 
   const quarterDivs = document.querySelectorAll(".quarter > .player");

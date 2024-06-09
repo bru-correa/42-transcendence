@@ -47,3 +47,9 @@ def get_tournament_game_page(request):
     if request.headers.get('X-Custom-Header') != 'self':
         return render(request, "pages/tournamentGame.html")
     return render(request, "sections/tournamentGame.html")
+
+@login_required(login_url="/login")
+def get_winner_page(request):
+    if request.headers.get('X-Custom-Header') != 'self':
+        return render(request, "pages/winner.html")
+    return render(request, "sections/winner.html")

@@ -20,6 +20,8 @@ async function showSection(section) {
     loadTournament();
   } else if (section === "/tournament/create") {
     loadTournamentForm();
+  } else if (section === "/tournament/winner") {
+    setWinner();
   }
   window.history.pushState({}, "", section);
 }
