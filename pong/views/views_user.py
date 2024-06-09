@@ -10,6 +10,8 @@ def validate_name(name: str):
 		raise Exception('Display name must be between 3 and 20 characters long')
 	if any(not c.isalnum() for c in name):
 		raise Exception('Display name cannot include spaces or special characters')
+	if User.objects.filter(display_name=name).exists():
+		raise Exception('Display name already in use')
 
 @login_required(login_url="/login")
 def update_display_name(request: HttpRequest) -> JsonResponse:
@@ -20,8 +22,11 @@ def update_display_name(request: HttpRequest) -> JsonResponse:
 	try:
 		if new_display_name is None:
 			raise Exception("'name' is empty")
+		if not isinstance(request.user, User):
+			raise Exception("Authentication failed to provide a valid user")
 		validate_name(new_display_name)
-		user: User = request.user
+		user = request.user
+		old_display_name = user.display_name
 		user.display_name = new_display_name
 		user.save()
 	except Exception as e:
@@ -32,5 +37,5 @@ def update_display_name(request: HttpRequest) -> JsonResponse:
 
 	return JsonResponse({
 		'success': True,
-		'message': f'User {request.user.intra_name} is now named {new_display_name}'
+		'message': f'User {old_display_name} is now named {user.display_name}'
 		})

@@ -18,10 +18,14 @@ class User(AbstractUser):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	intra_name = models.CharField(max_length=150, unique=True, blank=False, null=False)
 	USERNAME_FIELD = "intra_name"
-	display_name = models.CharField(max_length=150, unique=False)
+	display_name = models.CharField(max_length=150, unique=True)
 	def save(self, *args, **kwargs): # On creation, display_name = intra_name
 		if not self.display_name:
 			self.display_name = self.intra_name
+			i = 1
+			while User.objects.filter(display_name=self.display_name).exists():
+				self.display_name = self.intra_name + str(i)
+				i += 1
 		super().save(*args, **kwargs)
 
 	avatar = models.FileField(
