@@ -35,7 +35,6 @@ APPEND_SLASH = True
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -146,6 +145,8 @@ STATICFILES_DIRS = [
 MEDIA_URL = "media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+CSRF_COOKIE_SECURE = True
 
 CSRF_TRUSTED_ORIGINS = ["https://localhost"]
 
