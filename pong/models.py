@@ -43,10 +43,12 @@ class User(AbstractBaseUser):
 	def save(self, *args, **kwargs): # On creation, display_name = intra_name
 		if not self.display_name:
 			self.display_name = self.intra_name
-			i = 1
 			while User.objects.filter(display_name=self.display_name).exists():
-				self.display_name = self.intra_name + str(i)
-				i += 1
+				if self.intra_name[-1].isdigit():
+					digit = int(self.intra_name[-1])
+					self.display_name = self.intra_name[:-1] + str(digit + 1)
+				else:
+					self.display_name = self.intra_name + str(0)
 		super().save(*args, **kwargs)
 
 	avatar = models.FileField(
