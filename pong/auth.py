@@ -3,9 +3,9 @@ from .models import User
 
 class UserBackend(BaseBackend):
 	def authenticate(self, request, user) -> User | None:
-		session_key = request.session.session_key
-		if not session_key:
+		if not request.session.session_key:
 			request.session.create()
+		session_key = request.session.session_key
 
 		try:
 			auth_user = User.objects.get(intra_name=user)
