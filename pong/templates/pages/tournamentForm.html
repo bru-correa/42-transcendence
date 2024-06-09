@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
+{% block scripts %}
+  <script src="{% static 'pong/js/tournamentForm.js' %}" type="module"></script>
+{% endblock scripts %}
 {% block content %}
-  <h1>Create Tournament</h1>
-{% endblock content}
+  <h1 class="text-center mt-3">Create Tournament</h1>
+  {% include "../components/tournamentForm.html" %}
+{% endblock content %}
