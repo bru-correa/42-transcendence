@@ -1,4 +1,5 @@
 <div
+  id="sidebar"
   class="d-flex flex-column flex-nowrap sticky-top px-3 bg-secondary-subtle"
   style="height: 100dvh"
 >
@@ -7,7 +8,7 @@
   >
     <li class="nav-item">
       <a
-        href="/"
+        onclick="showSection('/')"
         class="nav-link py-3 fs-5 fw-bold text-body d-flex align-items-center icon-link-hover"
         title=""
       >
@@ -17,22 +18,22 @@
     </li>
     <li>
       <a
-        href="/social"
+        onclick="showSection('/social')"
         class="nav-link py-3 fs-5 fw-bold text-body d-flex align-items-center"
         title=""
       >
         <i class="bi-people-fill me-2 fs-4"></i>
-        Social
+        <span>Social</span>
       </a>
     </li>
     <li>
       <a
-        href="/stats"
+        onclick="showSection('/stats')"
         class="nav-link py-3 fs-5 fw-bold text-body d-flex align-items-center"
         title=""
       >
         <i class="bi-bar-chart-fill me-2 fs-4"></i>
-        Stats
+        <span>Stats</span>
       </a>
     </li>
   </ul>

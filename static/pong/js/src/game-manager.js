@@ -32,7 +32,7 @@ export default class GameManager {
     this.gameOver = false;
     this.gameOverPopUp = document.getElementById("game-over");
 
-    this.unpauseFrame = false;
+    this.unpauseFrame = true;
 
     this.gameMode = gameMode;
   }
