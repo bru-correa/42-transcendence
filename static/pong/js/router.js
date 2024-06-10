@@ -23,6 +23,8 @@ function setupSection(section) {
     setWinner();
   } else if (section === "/profile/") {
     setupProfile();
+  } else if (section === "/social/") {
+    setupSocial();
   }
 }
 

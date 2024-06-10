@@ -1,4 +1,75 @@
 {% load static %}
+{% csrf_token %}
 {% block content %}
-  <h1>Social</h1>
+  <h1 class="text-center mt-3">Social</h1>
+  <h4 class="text-center mt-5">Pending Invites</h4>
+  <ul class="list-group">
+    {% for pending in sent_requests %}<li class="list-group-item">{{ pending.display_name }}</li>{% endfor %}
+    <li class="list-group-item">Friend 1</li>
+    <li class="list-group-item">Friend 2</li>
+    <li class="list-group-item">Friend 3</li>
+  </ul>
+  <h4 class="text-center mt-5">Received Invites</h4>
+  <ul class="list-group">
+    {% for received in received_requests %}
+      <li class="list-group-item">
+        <span>{{ received.display_name }}</span>
+        <button>Accept</button>
+      </li>
+    {% endfor %}
+    <li class="list-group-item">
+      <span>Friend 1</span>
+      <button>Accept</button>
+    </li>
+    <li class="list-group-item">
+      <span>Friend 2</span>
+      <button>Accept</button>
+    </li>
+    <li class="list-group-item">
+      <span>Friend 3</span>
+      <button>Accept</button>
+    </li>
+  </ul>
+  <h4 class="text-center mt-5">Friend List</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">User</th>
+        <th scope="col">Status</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for friend in friends %}
+        <tr id="{{ friend.display_name }}">
+          <td>{{ friend.display_name }}</td>
+          <td>Online</td>
+          <td>
+            <button onclick="removeFriend({{ friend.display_name }})">Remove</button>
+          </td>
+        </tr>
+      {% endfor %}
+      <tr id="User1">
+        <td>User1</td>
+        <td>Online</td>
+        <td>
+          <button onclick="removeFriend('User1')">Remove</button>
+        </td>
+      </tr>
+      <tr id="User2">
+        <td>User2</td>
+        <td>Online</td>
+        <td>
+          <button onclick="removeFriend('User2')">Remove</button>
+        </td>
+      </tr>
+      <tr id="User3">
+        <td>User3</td>
+        <td>Online</td>
+        <td>
+          <button onclick="removeFriend('User3')">Remove</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 {% endblock content %}
