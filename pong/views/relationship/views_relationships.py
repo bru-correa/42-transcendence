@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
-from pong.models import Relationship, User
+from pong.models import User
 from .queries_relationship import *
 
 @login_required(login_url="/login")
@@ -22,20 +22,12 @@ def get_relationships_context(user: User):
 	friends = get_friends_list(user)
 	friends.sort(key=lambda usr: usr.display_name.lower())
 
-	# relationships = Relationship.objects.filter(Q(user1=user) | Q(user2=user))
-
-	# if relationships.exists():
-	# 	print("here")
-	# 	not_friends = User.objects.exclude(
-	# 		Q(pk=user.pk) | Q(friendship_from_user1=user.pk) | Q(friendship_from_user2=user.pk)
-	# 		).order_by("display_name").values("id", "display_name", "avatar", "last_login")
-	# else:
-	# 	not_friends = User.objects.exclude(pk=user.pk)
 	not_friends = get_not_friends_qlist(user)
 
 	sent_requests = [
 		User.objects.get(pk=user_id) for user_id in list(get_sent_requests_qlist(user))
 		]
+
 	received_requests = [
 		User.objects.get(pk=user_id) for user_id in list(get_received_requests_qlist(user))
 		]
