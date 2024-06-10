@@ -50,17 +50,19 @@ def get_relationships_context(user: User):
 	else:
 		not_friends = User.objects.exclude(pk=user.pk)
 
-	sent_requests = Relationship.objects.filter(
+	sent_requests_qlist = Relationship.objects.filter(
 		user1=user,
 		user1_is_friendly=True,
 		user2_is_friendly=False
-		).values()
+		).values_list('user2', flat=True)
+	sent_requests = [User.objects.get(pk=user_id) for user_id in list(sent_requests_qlist)]
 
-	received_requests = Relationship.objects.filter(
+	received_requests_qlist = Relationship.objects.filter(
 		user2=user,
 		user1_is_friendly=False,
 		user2_is_friendly=True
-		).values()
+		).values_list('user1', flat=True)
+	received_requests = [User.objects.get(pk=user_id) for user_id in list(received_requests_qlist)]
 
 	context = {
 		'friends': friends,
