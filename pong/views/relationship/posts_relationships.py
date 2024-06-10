@@ -47,6 +47,6 @@ def send_friend_request(request: HttpRequest):
 		}, status=400)
 
 	return JsonResponse({
-	'success': True,
-	'message': 'Friend request sent'
+		'success': True,
+		'message': 'Friend request sent'
 	})
