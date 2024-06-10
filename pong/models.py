@@ -54,7 +54,7 @@ class User(AbstractBaseUser):
 	avatar = models.FileField(
 		blank=True,
 		null=True,
-		default='default_avatar.svg',
+		default='/static/pong/img/default_avatar.svg',
 		validators=[
 			FileExtensionValidator(allowed_extensions=['svg', 'png', 'jpg', 'jpeg']),
 			file_size_validator
