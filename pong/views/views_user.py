@@ -39,3 +39,35 @@ def update_display_name(request: HttpRequest) -> JsonResponse:
 		'success': True,
 		'message': f'User {old_display_name} is now named {user.display_name}'
 		})
+
+@login_required(login_url="/login")
+def update_avatar(request: HttpRequest) -> JsonResponse:
+	if request.method != "POST":
+		return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+	uploaded_file = request.FILES.get('file')
+	try:
+		if uploaded_file is None:
+			raise Exception("'file' is empty")
+		if not isinstance(request.user, User):
+			raise Exception("Authentication failed to provide a valid user")
+	except Exception as e:
+		return JsonResponse({
+			'success': False,
+			'message': f'{e}'
+		}, status=400)
+
+	try:
+		user = request.user
+		user.avatar.save(user.display_name, uploaded_file)
+		user.save()
+	except Exception as e:
+		return JsonResponse({
+			'success': False,
+			'message': f'{e}'
+		}, status=415)
+
+	return JsonResponse({
+		'success': True,
+		'message': 'Avatar updated successfuly'
+		})
