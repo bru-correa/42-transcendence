@@ -150,10 +150,6 @@ function startGame() {
     const playAgainButton = document.getElementById("play-again");
     playAgainButton.addEventListener("click", resetGame);
   }
-
-  function setGameOver(bool) {
-    gameManager.gameOver = bool;
-  }
 }
 
 window.startGame = startGame;
