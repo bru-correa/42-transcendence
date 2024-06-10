@@ -8,9 +8,7 @@ async function getSectionHTML(section) {
   return await response.text();
 }
 
-async function showSection(section) {
-  const sectionHtml = await getSectionHTML(section);
-  document.getElementById("app").innerHTML = sectionHtml;
+function setupSection(section) {
   if (section === "/game") {
     localStorage.setItem("gameMode", "local");
     startGame();
@@ -23,6 +21,12 @@ async function showSection(section) {
   } else if (section === "/tournament/winner") {
     setWinner();
   }
+}
+
+async function showSection(section) {
+  const sectionHtml = await getSectionHTML(section);
+  document.getElementById("app").innerHTML = sectionHtml;
+  setupSection(section);
   window.history.pushState({}, "", section);
 }
 
@@ -35,3 +39,10 @@ function deactivateSidebar() {
   const sidebar = document.getElementById("sidebar");
   sidebar.style.display = "none";
 }
+
+window.addEventListener("popstate", async () => {
+  const section = window.location.pathname;
+  const sectionHtml = await getSectionHTML(section);
+  document.getElementById("app").innerHTML = sectionHtml;
+  setupSection(section);
+});
