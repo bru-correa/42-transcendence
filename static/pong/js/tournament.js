@@ -14,7 +14,7 @@ function loadTournament() {
   const currentMatch = Number(JSON.parse(currentMatchString));
 
   if (winner) {
-    showSection("/tournament/winner");
+    showSection("/tournament/winner/");
   }
 
   const quarterDivs = document.querySelectorAll(".quarter > .player");

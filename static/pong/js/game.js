@@ -140,7 +140,7 @@ function startGame() {
   }
 
   function backToTournament() {
-    showSection("/tournament");
+    showSection("/tournament/");
   }
 
   if (gameMode === "tournament") {

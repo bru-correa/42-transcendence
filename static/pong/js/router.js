@@ -10,18 +10,18 @@ async function getSectionHTML(section) {
 }
 
 function setupSection(section) {
-  if (section === "/game") {
+  if (section === "/game/") {
     localStorage.setItem("gameMode", "local");
     startGame();
-  } else if (section === "/tournament/game") {
+  } else if (section === "/tournament/game/") {
     startGame();
-  } else if (section === "/tournament") {
+  } else if (section === "/tournament/") {
     loadTournament();
-  } else if (section === "/tournament/create") {
+  } else if (section === "/tournament/create/") {
     loadTournamentForm();
-  } else if (section === "/tournament/winner") {
+  } else if (section === "/tournament/winner/") {
     setWinner();
-  } else if (section === "/profile") {
+  } else if (section === "/profile/") {
     setupProfile();
   }
 }

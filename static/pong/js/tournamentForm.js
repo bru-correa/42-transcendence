@@ -25,7 +25,7 @@ function loadTournamentForm() {
     localStorage.setItem("quarters", JSON.stringify(quarters));
     localStorage.setItem("currentMatch", "0");
 
-    showSection("/tournament");
+    showSection("/tournament/");
   });
 }
 
