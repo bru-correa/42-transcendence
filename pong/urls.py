@@ -17,5 +17,6 @@ urlpatterns = [
     path("tournament/game", views.get_tournament_game_page, name="tournament-game-page"),
     path("tournament/winner", views.get_winner_page, name="tournament-winner-page"),
     path("user/update_name/", views.update_display_name, name="update-display-name"),
-    path("profile", views.get_profile_page, name="profile-page")
+    path("user/update_avatar/", views.update_avatar, name="update-avatar" ),
+    path("profile", views.get_profile_page, name="profile-page"),
 ]

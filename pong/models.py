@@ -1,6 +1,6 @@
 import uuid
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
@@ -26,7 +26,6 @@ class IntraUserManager(BaseUserManager):
 	def create_superuser(self, intra_name):
 		user = self.model(
 			intra_name = intra_name,
-			# is_superuser = True
 		)
 		user.is_superuser = True
 		user.save(using=self._db)

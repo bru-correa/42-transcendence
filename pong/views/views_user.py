@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.validators import FileExtensionValidator
 from django.http import HttpRequest, JsonResponse
 from pong.models import User
 
@@ -48,6 +49,7 @@ def update_avatar(request: HttpRequest) -> JsonResponse:
 			raise Exception("'file' is empty")
 		if not isinstance(request.user, User):
 			raise Exception("Authentication failed to provide a valid user")
+		FileExtensionValidator(allowed_extensions=['svg', 'png', 'jpg', 'jpeg'])(uploaded_file)
 	except Exception as e:
 		return JsonResponse({
 			'success': False,
@@ -56,8 +58,7 @@ def update_avatar(request: HttpRequest) -> JsonResponse:
 
 	try:
 		user = request.user
-		user.avatar.save(user.display_name, uploaded_file)
-		user.save()
+		user.avatar.save(uploaded_file.name, uploaded_file)
 	except Exception as e:
 		return JsonResponse({
 			'success': False,
