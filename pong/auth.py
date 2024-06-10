@@ -2,10 +2,10 @@ from django.contrib.auth.backends import BaseBackend
 from .models import User
 
 class UserBackend(BaseBackend):
-	def authenticate(self, request, user) -> User:
-		session_key = request.session.session_key
-		if not session_key:
+	def authenticate(self, request, user) -> User | None:
+		if not request.session.session_key:
 			request.session.create()
+		session_key = request.session.session_key
 
 		try:
 			auth_user = User.objects.get(intra_name=user)
@@ -20,7 +20,7 @@ class UserBackend(BaseBackend):
 		auth_user.save()
 		return auth_user
 
-	def get_user(self, user_id):
+	def get_user(self, user_id) -> User | None:
 		try:
 			return User.objects.get(pk=user_id)
 		except Exception as e:

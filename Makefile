@@ -20,6 +20,7 @@ restart:
 
 down clean:
 	$(COMPOSE_CMD) down
+	rm -f logs/*.log
 
 dbclean: clean
 	rm -rf pong/migrations/0*
