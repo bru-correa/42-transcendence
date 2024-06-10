@@ -5,6 +5,7 @@ async function getSectionHTML(section) {
       "X-Custom-Header": "self",
     },
   });
+  if (response.status !== 200) return null;
   return await response.text();
 }
 
@@ -25,6 +26,7 @@ function setupSection(section) {
 
 async function showSection(section) {
   const sectionHtml = await getSectionHTML(section);
+  if (sectionHtml === null) return;
   document.getElementById("app").innerHTML = sectionHtml;
   setupSection(section);
   window.history.pushState({}, "", section);
@@ -40,9 +42,21 @@ function deactivateSidebar() {
   sidebar.style.display = "none";
 }
 
+async function isLoggedIn() {
+  const response = await fetch("/login/check/", {
+    method: "GET",
+  });
+  if (response.status !== 200) return false;
+  return true;
+}
+
 window.addEventListener("popstate", async () => {
+  // if ((await isLoggedIn()) === false) {
+  //   window.location.href = "/login";
+  // }
   const section = window.location.pathname;
   const sectionHtml = await getSectionHTML(section);
+  if (sectionHtml === null) return;
   document.getElementById("app").innerHTML = sectionHtml;
   setupSection(section);
 });

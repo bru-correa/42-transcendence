@@ -63,3 +63,8 @@ def get_intra_user_from_code(code: str):
 	except Exception as e:
 		print(f"Intra user information exchange error: {e}")
 	return intra_user_response.json()
+
+def is_logged_in(request: HttpRequest):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    return HttpResponse(status=200)
