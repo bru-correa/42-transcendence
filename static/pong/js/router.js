@@ -21,6 +21,8 @@ function setupSection(section) {
     loadTournamentForm();
   } else if (section === "/tournament/winner") {
     setWinner();
+  } else if (section === "/profile") {
+    setupProfile();
   }
 }
 
@@ -58,5 +60,10 @@ window.addEventListener("popstate", async () => {
   const sectionHtml = await getSectionHTML(section);
   if (sectionHtml === null) return;
   document.getElementById("app").innerHTML = sectionHtml;
+  setupSection(section);
+});
+
+window.addEventListener("load", () => {
+  const section = window.location.pathname;
   setupSection(section);
 });

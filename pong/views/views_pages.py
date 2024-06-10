@@ -61,3 +61,10 @@ def get_winner_page(request):
     if request.headers.get('X-Custom-Header') != 'self':
         return render(request, "pages/winner.html")
     return render(request, "sections/winner.html")
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url="/login")
+def get_profile_page(request):
+    if request.headers.get('X-Custom-Header') != 'self':
+        return render(request, "pages/profile.html")
+    return render(request, "sections/profile.html")

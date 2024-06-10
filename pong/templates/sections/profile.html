@@ -1,0 +1,24 @@
+{% load static %}
+{% block content %}
+  <h1 class="text-center mt-3">Edit Profile</h1>
+  <form id="profile-form" class="d-flex flex-column gap-3 mt-5">
+    <div class="form-group">
+      <label for="display-name" class="form-label">Update your display name</label>
+      <input type="text"
+             class="form-control"
+             id="display-name"
+             aria-describedby="Display Name"
+             placeholder="{{ user.display_name }}"
+             minlength="1"
+             maxlength="20" />
+    </div>
+    <div class="form-group">
+      <label for="avatar" class="form-label">Upload your avatar</label>
+      <input type="file"
+             class="form-control"
+             id="avatar"
+             aria-describedby="Avatar" />
+    </div>
+    <button type="submit" class="btn btn-lg btn-primary mt-3">Update</button>
+  </form>
+{% endblock content %}
