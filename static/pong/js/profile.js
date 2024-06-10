@@ -11,8 +11,9 @@ async function updateDisplayName(displayName, csrfToken) {
   const data = await response.json();
   if (!response.ok) {
     showErrorMessage(data.message);
+    return false;
   }
-  console.log(data);
+  return true;
 }
 
 async function updateAvatar(avatar, csrfToken) {
@@ -28,7 +29,9 @@ async function updateAvatar(avatar, csrfToken) {
   const data = await response.json();
   if (!response.ok) {
     showErrorMessage(data.message);
+    return false;
   }
+  return true;
 }
 
 function showErrorMessage(message) {
@@ -46,12 +49,17 @@ function setupProfile() {
       "[name=csrfmiddlewaretoken]",
     ).value;
 
+    let haveSucceeded;
+
     const displayName = document.getElementById("display-name").value;
-    if (displayName) await updateDisplayName(displayName, csrfToken);
+    if (displayName)
+      haveSucceeded = await updateDisplayName(displayName, csrfToken);
+    if (haveSucceeded == false) return;
 
     const avatar = document.getElementById("avatar").files[0];
-    if (avatar) await updateAvatar(avatar, csrfToken);
+    if (avatar) haveSucceeded = await updateAvatar(avatar, csrfToken);
+    if (haveSucceeded == false) return;
 
-    // showSection("/");
+    showSection("/");
   });
 }
