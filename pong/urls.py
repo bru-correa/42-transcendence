@@ -11,5 +11,8 @@ urlpatterns = [
     path("social/", views.get_social_page, name="social-page"),
     path("stats/", views.get_stats_page, name="stats-page"),
     path("tournament/", views.get_tournament_page, name="tournament-page"),
-    path("user/update_name/", views.update_display_name, name="update-display-name")
+    path("user/update_name/", views.update_display_name, name="update-display-name"),
+    path("friends/", views.get_relationships, name="get-relationships"),
+    path("friends/send/", views.send_friend_request, name="send-friend-request"),
+    path("tests/", views.get_tests_page, name="tests-page"),
 ]
