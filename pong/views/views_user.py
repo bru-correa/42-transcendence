@@ -2,9 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
 from pong.models import User
 
-#TODO
-# update avatar
-
 def validate_name(name: str):
 	if len(name) >= 20 or len(name) < 3:
 		raise Exception('Display name must be between 3 and 20 characters long')
