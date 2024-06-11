@@ -17,6 +17,7 @@ class UserBackend(BaseBackend):
 			return None
 
 		auth_user.session_key = session_key
+		auth_user.is_online = True
 		auth_user.save()
 		return auth_user
 

@@ -60,6 +60,7 @@ class User(AbstractBaseUser):
 		])
 
 	session_key = models.CharField(blank=True, null=True, max_length=40)
+	is_online = models.BooleanField(default=False)
 
 	created_at = models.DateTimeField(default=timezone.now)
 	updated_at = AutoDateTimeField(default=timezone.now)

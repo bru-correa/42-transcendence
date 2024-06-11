@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect
 from urllib.parse import urlencode, quote_plus
+from pong.models import User
 
 INTRA_AUTH_URL = "https://api.intra.42.fr/oauth/authorize?" + urlencode({
 	'client_id': os.environ.get('FT_CLIENT_ID'),
@@ -16,8 +17,11 @@ INTRA_AUTH_URL = "https://api.intra.42.fr/oauth/authorize?" + urlencode({
 
 @login_required(login_url="/login")
 def manage_logout(request):
-    logout(request)
-    return redirect('/login')
+	if isinstance(request.user, User):
+		request.user.is_online = False
+		request.user.save()
+	logout(request)
+	return redirect('/login')
 
 # On clicking "Login/Sign In", redirects to Intra OAuth2
 def intra_login(request):
@@ -61,8 +65,3 @@ def get_intra_user_from_code(code: str):
 	except Exception as e:
 		print(f"Intra user information exchange error: {e}")
 	return intra_user_response.json()
-
-def is_logged_in(request: HttpRequest):
-    if not request.user.is_authenticated:
-        return HttpResponse(status=401)
-    return HttpResponse(status=200)
