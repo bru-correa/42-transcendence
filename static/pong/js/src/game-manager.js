@@ -1,7 +1,13 @@
-async function registerMatch(playerLScore, playerRName, playerRScore) {
+async function registerMatch(
+  playerLName,
+  playerLScore,
+  playerRName,
+  playerRScore,
+) {
   const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
   const formData = new FormData();
 
+  formData.append("user_display_name", playerLName);
   formData.append("user_score", playerLScore);
   formData.append("opponent_display_name", playerRName);
   formData.append("opponent_score", playerRScore);
@@ -72,7 +78,12 @@ export default class GameManager {
       if (this.gameMode === "tournament") {
         this.setTournamentMatchWinner(this.playerLName);
       } else {
-        registerMatch(this.playerLScore, this.playerRName, this.playerRScore);
+        registerMatch(
+          this.playerLName,
+          this.playerLScore,
+          this.playerRName,
+          this.playerRScore,
+        );
       }
       this.gameOverPopUp.style.display = "flex";
     }
@@ -87,7 +98,12 @@ export default class GameManager {
       if (this.gameMode === "tournament") {
         this.setTournamentMatchWinner(this.playerRName);
       } else {
-        registerMatch(this.playerLScore, this.playerRName, this.playerRScore);
+        registerMatch(
+          this.playerLName,
+          this.playerLScore,
+          this.playerRName,
+          this.playerRScore,
+        );
       }
       this.gameOverPopUp.style.display = "flex";
     }

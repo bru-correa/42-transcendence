@@ -46,10 +46,16 @@ def register_match(request: HttpRequest):
 			raise Exception("Opponent display name must be a valid string")
 
 		user = request.user
-		match = MatchHistory(
-			user=user, user_score=int(user_score),
-			opponent_display_name=opponent_display_name, opponent_score=int(opponent_score)
-			)
+		if user_display_name is None:
+			match = MatchHistory(
+				user=user, user_display_name=user.display_name, user_score=int(user_score),
+				opponent_display_name=opponent_display_name, opponent_score=int(opponent_score)
+				)
+		else:
+			match = MatchHistory(
+				user=user, user_display_name=user_display_name, user_score=int(user_score),
+				opponent_display_name=opponent_display_name, opponent_score=int(opponent_score)
+				)
 		match.save()
 
 	except Exception as e:
