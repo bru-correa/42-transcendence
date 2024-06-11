@@ -1,4 +1,28 @@
 {% load static %}
 {% block content %}
-  <h1>Stats</h1>
+  <h1 class="text-center mt-3">Stats</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">User Score</th>
+        <th scope="col">Opponent Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for match in matches %}
+        <tr>
+          <td>{{ match.finished_at }}</td>
+          <td>{{ match.user_score }}</td>
+          <td>{{ match.opponent_score }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <p>
+      <strong>Victories:</strong> {{ victories }}
+    </p>
+    <p>
+      <strong>Losses:</strong> {{ losses }}
+    </p>
+  </table>
 {% endblock content %}

@@ -9,6 +9,7 @@ urlpatterns = [
 	path("login/oauth2/redirect/", views.intra_login_redirect, name="login-oauth2-redirect"),
     path("logout/", views.manage_logout, name="logout"),
     path("game/", views.get_game_page, name="game-page"),
+    path("game/register/", views.register_match, name="register-match"),
     path("social/", views.get_social_page, name="social-page"),
     path("friend/send/", views.send_friend_request, name="send-friend-request"),
     path("friend/accept/", views.accept_friend_request, name="accept-friend-request"),

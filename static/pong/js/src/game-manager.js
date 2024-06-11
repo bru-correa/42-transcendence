@@ -1,3 +1,22 @@
+async function registerMatch(playerLScore, playerRName, playerRScore) {
+  const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+  const formData = new FormData();
+
+  formData.append("user_score", playerLScore);
+  formData.append("opponent_display_name", playerRName);
+  formData.append("opponent_score", playerRScore);
+
+  const response = await fetch("/game/register/", {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": csrfToken,
+    },
+    body: formData,
+  });
+
+  await response.json();
+}
+
 export default class GameManager {
   constructor({ maxScore, gameMode }) {
     this.playerLScore = 0;
@@ -52,8 +71,9 @@ export default class GameManager {
       this.popupWinnerName.innerHTML = this.playerLName;
       if (this.gameMode === "tournament") {
         this.setTournamentMatchWinner(this.playerLName);
+      } else {
+        registerMatch(this.playerLScore, this.playerRName, this.playerRScore);
       }
-      // Send info to database
       this.gameOverPopUp.style.display = "flex";
     }
   }
@@ -66,8 +86,9 @@ export default class GameManager {
       this.popupWinnerName.innerHTML = this.playerRName;
       if (this.gameMode === "tournament") {
         this.setTournamentMatchWinner(this.playerRName);
+      } else {
+        registerMatch(this.playerLScore, this.playerRName, this.playerRScore);
       }
-      // Send info to database
       this.gameOverPopUp.style.display = "flex";
     }
   }
