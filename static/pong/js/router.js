@@ -25,6 +25,8 @@ function setupSection(section) {
     setupProfile();
   } else if (section === "/social/") {
     setupSocial();
+  } else if (section === "/") {
+    setupHome();
   }
 }
 

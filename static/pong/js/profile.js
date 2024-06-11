@@ -1,7 +1,7 @@
 async function updateDisplayName(displayName, csrfToken) {
   const formData = new FormData();
   formData.append("name", displayName);
-  const response = await fetch("user/update_name/", {
+  const response = await fetch("/user/update_name/", {
     method: "POST",
     headers: {
       "X-CSRFToken": csrfToken,
@@ -19,7 +19,7 @@ async function updateDisplayName(displayName, csrfToken) {
 async function updateAvatar(avatar, csrfToken) {
   const formData = new FormData();
   formData.append("file", avatar);
-  const response = await fetch("user/update_avatar/", {
+  const response = await fetch("/user/update_avatar/", {
     method: "POST",
     headers: {
       "X-CSRFToken": csrfToken,

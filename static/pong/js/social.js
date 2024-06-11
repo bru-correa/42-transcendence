@@ -1,7 +1,5 @@
 // Run on page load
-function setupSocial() {
-  console.log("setup social");
-}
+function setupSocial() {}
 
 function removeFriend(displayName) {
   const friendRow = document.getElementById(displayName);
