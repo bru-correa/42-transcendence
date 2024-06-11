@@ -5,6 +5,7 @@ from django.http import HttpRequest, JsonResponse
 from pong.models import MatchHistory, User
 
 def get_match_history_context(user: User):
+	# TODO optimize queries
 	matches = MatchHistory.objects.filter(user=user).order_by('-finished_at')
 	victories = MatchHistory.objects.filter(user=user,user_score__gt=F('opponent_score')).count()
 	losses = MatchHistory.objects.filter(user=user,user_score__lt=F('opponent_score')).count()
@@ -21,6 +22,7 @@ def register_match(request: HttpRequest):
 		return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 	user_score = request.POST.get('user_score')
+	user_display_name = request.POST.get('user_display_name')
 	opponent_display_name = request.POST.get('opponent_display_name')
 	opponent_score = request.POST.get('opponent_score')
 
@@ -44,10 +46,16 @@ def register_match(request: HttpRequest):
 			raise Exception("Opponent display name must be a valid string")
 
 		user = request.user
-		match = MatchHistory(
-			user=user, user_score=int(user_score),
-			opponent_display_name=opponent_display_name, opponent_score=int(opponent_score)
-			)
+		if user_display_name is None:
+			match = MatchHistory(
+				user=user, user_score=int(user_score),
+				opponent_display_name=opponent_display_name, opponent_score=int(opponent_score)
+				)
+		else:
+			match = MatchHistory(
+				user=user, user_display_name=user_display_name, user_score=int(user_score),
+				opponent_display_name=opponent_display_name, opponent_score=int(opponent_score)
+				)
 		match.save()
 
 	except Exception as e:
