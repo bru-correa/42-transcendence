@@ -82,14 +82,14 @@ def send_friend_request(request: HttpRequest):
 	if request.method != "POST":
 		return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-	friend_id = request.POST.get('friend_id')
+	friend_name = request.POST.get('friend_name')
 	try:
-		if friend_id is None:
-			raise Exception("'friend_id' is empty")
+		if friend_name is None:
+			raise Exception("'friend_name' is empty")
 		if not isinstance(request.user, User):
 			raise Exception("Authentication failed to provide a valid user")
 
-		friend = User.objects.get(pk=friend_id)
+		friend = User.objects.get(display_name=friend_name)
 		user = request.user
 		is_friend = Relationship.objects.filter(
 			Q(user1=user.pk,user2=friend.pk) | Q(user1=friend.pk,user2=user.pk),

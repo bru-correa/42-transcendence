@@ -1,6 +1,9 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
 from django.views.decorators.cache import cache_control
+from .relationship.views_relationships import get_relationships_context
+from pong.models import User
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
 def get_home_page(request):
@@ -23,9 +26,19 @@ def get_game_page(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
 def get_social_page(request):
-    if request.headers.get('X-Custom-Header') != 'self':
-        return render(request, "pages/social.html")
-    return render(request, "sections/social.html")
+	if not isinstance(request.user, User):
+		redirect("/logout")
+
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(
+			request, "pages/social.html",
+			context=get_relationships_context(request.user)
+			)
+
+	return render(
+			request, "sections/social.html",
+			context=get_relationships_context(request.user)
+			)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
