@@ -73,9 +73,6 @@ class MatchHistory(models.Model):
 	user = models.ForeignKey(User, related_name='matches', on_delete=models.CASCADE)
 
 	user_display_name = models.CharField(max_length=150, default='You')
-	def save(self, *args, **kwargs): # On creation, user_display_name = user.display_name
-		self.user_display_name = self.user.display_name
-		super().save(*args, **kwargs)
 
 	user_score = models.IntegerField(default=0)
 

@@ -15,7 +15,6 @@ function loadTournamentForm() {
     const players = [];
     for (let i = 1; i <= 8; i++) {
       const playerName = document.getElementById(`player-${i}`).value;
-      console.log(playerName);
       if (playerName === "") players.push(`Player ${i}`);
       else players.push(playerName);
     }

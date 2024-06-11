@@ -1,28 +1,36 @@
 {% load static %}
 {% block content %}
   <h1 class="text-center mt-3">Stats</h1>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Date</th>
-        <th scope="col">User Score</th>
-        <th scope="col">Opponent Score</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for match in matches %}
-        <tr>
-          <td>{{ match.finished_at }}</td>
-          <td>{{ match.user_score }}</td>
-          <td>{{ match.opponent_score }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
+  <h3 class="text-center mt-3">Duel Status</h3>
+  <div class="d-flex gap-3 justify-content-center fs-5 mt-3">
     <p>
       <strong>Victories:</strong> {{ victories }}
     </p>
     <p>
       <strong>Losses:</strong> {{ losses }}
     </p>
+  </div>
+  <h3 class="text-center mt-3">Match History</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Left Player Name</th>
+        <th scope="col">Right Player Name</th>
+        <th scope="col">Left Player Score</th>
+        <th scope="col">Right Player Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for match in matches %}
+        <tr>
+          <td>{{ match.finished_at }}</td>
+          <td>{{ match.user_display_name }}</td>
+          <td>{{ match.opponent_display_name }}</td>
+          <td>{{ match.user_score }}</td>
+          <td>{{ match.opponent_score }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
   </table>
 {% endblock content %}
