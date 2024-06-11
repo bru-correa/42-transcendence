@@ -14,8 +14,10 @@ function loadTournamentForm() {
 
     const players = [];
     for (let i = 1; i <= 8; i++) {
-      const player = document.getElementById(`player-${i}`).value;
-      players.push(player);
+      const playerName = document.getElementById(`player-${i}`).value;
+      console.log(playerName);
+      if (playerName === "") players.push(`Player ${i}`);
+      else players.push(playerName);
     }
 
     const quarters = shuffle(players);
