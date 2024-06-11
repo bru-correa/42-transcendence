@@ -5,7 +5,9 @@ from pong.models import MatchHistory, Relationship, User
 def create_user_list(number_of_users: int):
 	user_list: list[User] = []
 	for index in range(number_of_users):
-		new_user = User(intra_name=f'{index}User{index}')
+		new_user = User(intra_name=f'NotRealUser{index}')
+		if index % 2:
+			new_user.is_online = True
 		new_user.save()
 		user_list.append(new_user)
 	return user_list
