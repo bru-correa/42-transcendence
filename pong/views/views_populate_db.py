@@ -47,6 +47,7 @@ def populate_db(request: HttpRequest):
 				friends.save()
 
 			if index % 2:
+				# Create user's victories
 				match = MatchHistory(
 					user=user,
 					user_score=5,
@@ -54,6 +55,7 @@ def populate_db(request: HttpRequest):
 					opponent_score=(4 - index % 5)
 					)
 			else:
+				# Create user's defeats
 				match = MatchHistory(
 					user=user,
 					user_score=(4 - index % 5),
