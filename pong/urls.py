@@ -19,4 +19,7 @@ urlpatterns = [
     path("user/update_name/", views.update_display_name, name="update-display-name"),
     path("user/update_avatar/", views.update_avatar, name="update-avatar" ),
     path("profile/", views.get_profile_page, name="profile-page"),
+
+	# # ! Uncomment this to populate database
+    # path("populate_db/", views.populate_db, name="populate-db"),
 ]
