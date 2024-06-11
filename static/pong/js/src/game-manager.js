@@ -79,6 +79,8 @@ export default class GameManager {
       return;
     }
     this.deltaTime = (timestamp - this.lastTimeStamp) / this.targetFrameRate;
+    if (this.deltaTime > 1) this.deltaTime = 1;
+
     this.lastTimeStamp = timestamp;
   }
 
