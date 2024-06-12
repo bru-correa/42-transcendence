@@ -1,62 +1,68 @@
 {% load static %}
 {% csrf_token %}
 {% block content %}
-<h1 class="text-center mt-3">Social</h1>
-
-<form id="add-friend-form" class="d-flex flex-column gap-3 mt-5">
-	<label for="display-name" class="form-label text-center mt-5">
-		<h4>Add a friend</h4>
-	</label>
-	<input type="text" class="form-control" id="add-friend-name" aria-describedby="Add a friend" placeholder="ExampleUser123" />
-</form>
-<div class="toast align-items-center bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true"
-	id="toast">
-	<div class="d-flex">
-		<div class="toast-body" id="toast-body">Error message</div>
-		<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-	</div>
-</div>
-
-<h4 class="text-center mt-5">Pending Invites</h4>
-<ul class="list-group">
-	{% for pending in sent_requests %}
-	<li class="list-group-item">
-		{{ pending.display_name }}
-	</li>{% endfor %}
-</ul>
-<h4 class="text-center mt-5">Received Invites</h4>
-<ul class="list-group">
-	{% for received in received_requests %}
-	<li class="list-group-item">
-		<span>{{ received.display_name }}</span>
-		<button onclick="acceptFriendRequest('{{ received.id }}')">Accept</button>
-		<button onclick="denyFriendRequest('{{ received.id }}')">Deny</button>
-	</li>
-	{% endfor %}
-</ul>
-<h4 class="text-center mt-5">Friend List</h4>
-<table class="table">
-	<thead>
-		<tr>
-			<th scope="col">User</th>
-			<th scope="col">Status</th>
-			<th scope="col">Action</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for friend in friends %}
-		<tr id="{{ friend.display_name }}">
-			<td>{{ friend.display_name }}</td>
-			{% if friend.is_online %}
-			<td>Online</td>
-			{% else %}
-			<td>Offline</td>
-			{% endif %}
-			<td>
-				<button onclick="removeFriend('{{ friend.id }}')">Remove</button>
-			</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
+  <h1 class="text-center mt-3">Social</h1>
+  <form id="add-friend-form" class="d-flex flex-column gap-3 mt-5">
+    <label for="display-name" class="form-label text-center mt-5">
+      <h4>Add a friend</h4>
+    </label>
+    <input type="text"
+           class="form-control"
+           id="add-friend-name"
+           aria-describedby="Add a friend"
+           placeholder="ExampleUser123" />
+  </form>
+  <div class="toast align-items-center bg-danger border-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       id="toast">
+    <div class="d-flex">
+      <div class="toast-body" id="toast-body">Error message</div>
+      <button type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"></button>
+    </div>
+  </div>
+  <h4 class="text-center mt-5">Pending Invites</h4>
+  <ul class="list-group">
+    {% for pending in sent_requests %}<li class="list-group-item">{{ pending.display_name }}</li>{% endfor %}
+  </ul>
+  <h4 class="text-center mt-5">Received Invites</h4>
+  <ul class="list-group">
+    {% for received in received_requests %}
+      <li class="list-group-item">
+        <span>{{ received.display_name }}</span>
+        <button onclick="acceptFriendRequest('{{ received.id }}')">Accept</button>
+        <button onclick="denyFriendRequest('{{ received.id }}')">Deny</button>
+      </li>
+    {% endfor %}
+  </ul>
+  <h4 class="text-center mt-5">Friend List</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">User</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for friend in friends %}
+        <tr id="{{ friend.display_name }}">
+          <td>{{ friend.display_name }}</td>
+          {% if friend.is_online %}
+            <td>Online</td>
+          {% else %}
+            <td>Offline</td>
+          {% endif %}
+          <td>
+            <button class="mr-3" onclick="removeFriend('{{ friend.id }}')">Remove</button>
+            <button onclick="showSection('/stats/{{ friend.id }}/')">View</button>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock content %}
