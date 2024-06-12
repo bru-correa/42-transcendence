@@ -94,3 +94,7 @@ class Relationship(models.Model):
 		]
 	def __str__(self):
 		return f"{self.user1.display_name} - {self.user2.display_name}"
+	def save(self, *args, **kwargs):
+		if Relationship.objects.filter(user1=self.user2, user2=self.user1).exists():
+			raise ValidationError('Relationship already exists')
+		super().save(*args, **kwargs)
