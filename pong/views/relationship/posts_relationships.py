@@ -91,6 +91,9 @@ def send_friend_request(request: HttpRequest):
 
 		friend = User.objects.get(display_name=friend_name)
 		user = request.user
+		if user == friend:
+			raise Exception("You cannot add yourself as a friend")
+
 		is_friend = Relationship.objects.filter(
 			Q(user1=user.pk,user2=friend.pk) | Q(user1=friend.pk,user2=user.pk),
 			user1_is_friendly=True, user2_is_friendly=True
