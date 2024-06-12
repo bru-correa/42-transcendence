@@ -9,21 +9,21 @@ from pong.models import User
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
 def get_home_page(request):
-    if request.headers.get('X-Custom-Header') != 'self':
-        return render(request, "pages/home.html")
-    return render(request, "sections/home.html")
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(request, "pages/home.html")
+	return render(request, "sections/home.html")
 
 def get_login_page(request):
-    if request.headers.get('X-Custom-Header') != 'self':
-        return render(request, "pages/login.html")
-    return render(request, "sections/login.html")
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(request, "pages/login.html")
+	return render(request, "sections/login.html")
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
 def get_game_page(request):
-    if request.headers.get('X-Custom-Header') != 'self':
-        return render(request, "pages/game.html")
-    return render(request, "sections/game.html")
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(request, "pages/game.html")
+	return render(request, "sections/game.html")
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
@@ -39,44 +39,60 @@ def get_social_page(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
 def get_stats_page(request):
-    if not isinstance(request.user, User):
-        return redirect("/logout")
-    context = get_match_history_context(request.user)
-    if request.headers.get('X-Custom-Header') != 'self':
-        return render(request, "pages/stats.html", context)
-    return render(request, "sections/stats.html", context)
+	if not isinstance(request.user, User):
+		return redirect("/logout")
+	context = get_match_history_context(request.user)
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(request, "pages/stats.html", context)
+	return render(request, "sections/stats.html", context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url="/login")
+def get_user_stats_page(request, user_id):
+	if not isinstance(request.user, User):
+		return redirect("/logout")
+
+	try:
+		user = User.objects.get(pk=user_id)
+	except:
+		user = request.user
+
+	context = get_match_history_context(user)
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(request, "pages/stats.html", context)
+	return render(request, "sections/stats.html", context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
 def get_tournament_page(request):
-    if request.headers.get('X-Custom-Header') != 'self':
-        return render(request, "pages/tournament.html")
-    return render(request, "sections/tournament.html")
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(request, "pages/tournament.html")
+	return render(request, "sections/tournament.html")
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
 def get_tournament_form_page(request):
-    if request.headers.get('X-Custom-Header') != 'self':
-        return render(request, "pages/tournamentForm.html")
-    return render(request, "sections/tournamentForm.html")
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(request, "pages/tournamentForm.html")
+	return render(request, "sections/tournamentForm.html")
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
 def get_tournament_game_page(request):
-    if request.headers.get('X-Custom-Header') != 'self':
-        return render(request, "pages/tournamentGame.html")
-    return render(request, "sections/tournamentGame.html")
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(request, "pages/tournamentGame.html")
+	return render(request, "sections/tournamentGame.html")
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
 def get_winner_page(request):
-    if request.headers.get('X-Custom-Header') != 'self':
-        return render(request, "pages/winner.html")
-    return render(request, "sections/winner.html")
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(request, "pages/winner.html")
+	return render(request, "sections/winner.html")
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
 def get_profile_page(request):
-    if request.headers.get('X-Custom-Header') != 'self':
-        return render(request, "pages/profile.html")
-    return render(request, "sections/profile.html")
+	if request.headers.get('X-Custom-Header') != 'self':
+		return render(request, "pages/profile.html")
+	return render(request, "sections/profile.html")
