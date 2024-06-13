@@ -1,12 +1,14 @@
 services:
   django:
     build:
-      context: ./
+      context: ./django
     restart: on-failure:5
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
+      - ./django:/app
+    networks:
+      - app-net
     env_file:
       - .env
     command:
@@ -30,8 +32,8 @@ services:
       - POSTGRES_DB=${DB_NAME}
     ports:
       - "${DB_PORT}:${DB_PORT}"
-    volumes:
-      - ./postgres:/var/lib/postgresql/data
+    networks:
+      - app-net
     healthcheck:
       test: pg_isready -U ${DB_USER}
       interval: 5s
@@ -45,9 +47,15 @@ services:
     ports:
       - "443:443"
     volumes:
-      - ./static:/var/www/static
-      - ./media:/var/www/media
+      - ./django/static:/var/www/static
+      - ./django/media:/var/www/media
       - ./nginx/certs:/etc/nginx/certs
       - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - app-net
     depends_on:
       - django
+
+networks:
+  app-net:
+    driver: bridge
