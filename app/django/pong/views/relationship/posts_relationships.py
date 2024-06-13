@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpRequest, JsonResponse
+
 from pong.models import Relationship, User
 from .queries_relationship import *
 

@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
+
 from pong.models import MatchHistory, Relationship, User
 
 def create_user_list(number_of_users: int):

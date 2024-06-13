@@ -2,6 +2,7 @@ import numbers
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.http import HttpRequest, JsonResponse
+
 from pong.models import MatchHistory, User
 
 def get_match_history_context(user: User):

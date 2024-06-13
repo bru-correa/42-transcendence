@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import cache_control
 
+from pong.models import User
 from pong.views.views_match_history import get_match_history_context
 from .relationship.views_relationships import get_relationships_context
-from pong.models import User
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url="/login")
@@ -41,6 +41,7 @@ def get_social_page(request):
 def get_stats_page(request):
 	if not isinstance(request.user, User):
 		return redirect("/logout")
+
 	context = get_match_history_context(request.user)
 	if request.headers.get('X-Custom-Header') != 'self':
 		return render(request, "pages/stats.html", context)
@@ -51,7 +52,6 @@ def get_stats_page(request):
 def get_user_stats_page(request, user_id):
 	if not isinstance(request.user, User):
 		return redirect("/logout")
-
 	try:
 		user = User.objects.get(pk=user_id)
 	except:

@@ -1,4 +1,5 @@
 from django.db.models import Q
+
 from pong.models import Relationship, User
 
 def get_friends_list(user: User) -> list[User]:

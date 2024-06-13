@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.validators import FileExtensionValidator
 from django.http import HttpRequest, JsonResponse
+
 from pong.models import User
 
 def validate_name(name: str):

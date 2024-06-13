@@ -1,6 +1,3 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, JsonResponse
-from django.shortcuts import render
 from pong.models import User
 from .queries_relationship import *
 

@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect
 from urllib.parse import urlencode, quote_plus
+
 from pong.models import User
 
 INTRA_AUTH_URL = "https://api.intra.42.fr/oauth/authorize?" + urlencode({
