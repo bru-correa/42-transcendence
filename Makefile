@@ -31,6 +31,10 @@ down clean: clean-elk clean-app
 # Do the above and remove images
 fclean: fclean-app fclean-elk
 
+# Removes all volumes
+vclean: down
+	docker volume rm $(shell docker volume ls -q)
+
 # 42's way to clear all existing docker containers, networks, volumes and images
 preclean:
 	docker stop $(shell docker ps -qa); docker rm $(shell docker ps -qa); \
