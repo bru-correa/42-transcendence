@@ -5,7 +5,7 @@ function setupSocial() {
 
 		let success
 
-		const displayName = document.getElementById("add-friend-name").value
+		const displayName = document.getElementById("add-friend-name")?.value
 		if (displayName)
 			success = await addFriend(displayName)
 
