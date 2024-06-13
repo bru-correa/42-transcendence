@@ -16,7 +16,7 @@ COPY . .
 EXPOSE 8000
 
 CMD [ \
-	"sh", "-c", "|", \
+	"sh", "-c", \
   	"python3 manage.py makemigrations", \
   	"python3 manage.py migrate --noinput", \
   	"gunicorn -c gunicorn_config.py --reload" \
