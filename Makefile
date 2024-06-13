@@ -22,6 +22,9 @@ up: up-app up-elk
 # Stop application and log management containers
 stop: stop-app stop-elk
 
+# Resume application and log management containers
+restart: restart-app restart-elk
+
 # Stop and remove application and log management containers and networks
 down clean: clean-elk clean-app
 
@@ -49,6 +52,11 @@ stop-app:
 	$(COMPOSE_CMD) --file=$(APP_COMPOSE_FILE) stop
 stop-elk:
 	$(COMPOSE_CMD) --file=$(ELK_COMPOSE_FILE) stop
+
+restart-app:
+	$(COMPOSE_CMD) --file=$(APP_COMPOSE_FILE) restart
+restart-elk:
+	$(COMPOSE_CMD) --file=$(ELK_COMPOSE_FILE) restart
 
 down-app clean-app:
 	$(COMPOSE_CMD) --file=$(APP_COMPOSE_FILE) down
