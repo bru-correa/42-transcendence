@@ -15,16 +15,15 @@ ELK_COMPOSE_FILE := ./$(ELK_DIR)/docker-compose.yml
 # Launch application
 up-app:
 
-all: up
-
 # Launch application and log management
+all: up
 up: up-app up-elk
 
 # Stop application and log management containers
 stop: stop-app stop-elk
 
 # Stop and remove application and log management containers and networks
-down clean: clean-app clean-elk
+down clean: clean-elk clean-app
 
 # Do the above and remove images
 fclean: fclean-app fclean-elk
@@ -36,11 +35,10 @@ preclean:
 	docker volume rm $(shell docker volume ls -q); \
 	docker network rm $(shell docker network ls -q) 2>/dev/null
 
-#
+# Removes and then rebuilds all images and services
 re: fclean all
 
 # -----------------------SPECIFIC RULES--------------------------------------- #
-
 up-app:
 	$(COMPOSE_CMD) --file=$(APP_COMPOSE_FILE) up --build --detach
 up-elk:
