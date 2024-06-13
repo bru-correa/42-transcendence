@@ -1,0 +1,73 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
+    container_name: elasticsearch
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      discovery.type: single-node
+      xpack.security.http.ssl.enabled: false
+      xpack.license.self_generated.type: trial
+    networks:
+      - elastic-net
+    restart: unless-stopped
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.14.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: ${ELASTICSEARCH_URL:-}
+      ELASTICSEARCH_HOSTS: ${ELASTICSEARCH_HOSTS:-}
+      ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME:-}
+      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD:-}
+      xpack.security.enabled: false
+      xpack.license.self_generated.type: trial
+    networks:
+      - elastic-net
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.14.0
+    container_name: logstash
+    volumes:
+      - ./config/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
+      - ./config/logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
+    ports:
+      - 5044:5044
+      - 50000:50000/tcp
+      - 50000:50000/udp
+      - 9600:9600
+    environment:
+      LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
+    networks:
+      - elastic-net
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+  heartbeat:
+    image: docker.elastic.co/beats/heartbeat:8.14.0
+    volumes:
+      - ./config/heartbeat/heartbeat.yml:/usr/share/heartbeat/heartbeat.yml:ro,Z
+    environment:
+      HEARTBEAT_INTERNAL_PASSWORD: ${HEARTBEAT_INTERNAL_PASSWORD:-}
+      BEATS_SYSTEM_PASSWORD: ${BEATS_SYSTEM_PASSWORD:-}
+    networks:
+      - elastic-net
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+
+networks:
+  elastic-net:
+    driver: bridge
+
+volumes:
+  elasticsearch:
