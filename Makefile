@@ -29,7 +29,7 @@ restart: restart-app restart-elk
 down clean: clean-elk clean-app
 
 # Do the above and remove images
-fclean: fclean-app fclean-elk
+fclean: fclean-elk fclean-app
 
 # Removes all volumes
 vclean: down
