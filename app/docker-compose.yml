@@ -1,5 +1,6 @@
 services:
   django:
+    container_name: django
     build:
       context: ./django
     restart: on-failure:5
@@ -8,7 +9,7 @@ services:
     volumes:
       - ./django:/app
     networks:
-      - app-net
+      - net
     env_file:
       - .env
     command:
@@ -33,7 +34,7 @@ services:
     ports:
       - "${DB_PORT}:${DB_PORT}"
     networks:
-      - app-net
+      - net
     healthcheck:
       test: pg_isready -U ${DB_USER}
       interval: 5s
@@ -52,10 +53,10 @@ services:
       - ./nginx/certs:/etc/nginx/certs
       - ./nginx/conf.d:/etc/nginx/conf.d
     networks:
-      - app-net
+      - net
     depends_on:
       - django
 
 networks:
-  app-net:
+  net:
     driver: bridge

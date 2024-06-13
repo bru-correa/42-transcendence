@@ -1,18 +1,22 @@
 name: heartbeat
 
 heartbeat.monitors:
-  - type: tcp
-    schedule: "@every 5s"
-    hosts: ["localhost"]
-    ports: [8000]
-    service.name: ovelha-team-service
-    id: ovelha-id
-    name: ovelha
+  - type: icmp
+    id: ping-nginx
+    name: Nginx Ping
+    hosts: ["nginx"]
+    schedule: '*/5 * * * * * *'
 
   - type: icmp
-    id: ping-myhost
-    name: My Host Ping
-    hosts: ["localhost:8000"]
+    id: ping-django
+    name: Django Ping
+    hosts: ["django"]
+    schedule: '*/5 * * * * * *'
+
+  - type: icmp
+    id: ping-postgres
+    name: Postgres Ping
+    hosts: ["postgres"]
     schedule: '*/5 * * * * * *'
 
   - type: http

@@ -54,6 +54,7 @@ services:
 
   heartbeat:
     image: docker.elastic.co/beats/heartbeat:8.14.0
+    container_name: heartbeat
     volumes:
       - ./config/heartbeat/heartbeat.yml:/usr/share/heartbeat/heartbeat.yml:ro,Z
     environment:
@@ -67,7 +68,8 @@ services:
 
 networks:
   elastic-net:
-    driver: bridge
+    name: app_net
+    external: true
 
 volumes:
   elasticsearch:
