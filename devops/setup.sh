@@ -7,6 +7,7 @@ until curl -s $elastic_url -o /dev/null; do
   echo "Waiting for Elastic..."
 done
 
+sleep 10
 
 curl -u elastic:elastic \
 	-X POST \
